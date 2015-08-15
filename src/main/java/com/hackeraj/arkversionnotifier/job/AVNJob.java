@@ -120,7 +120,7 @@ public class AVNJob implements Job {
 				if (br != null) {
 					br.close();
 				}
-				if (conn != null) {
+				if (conn != null) { 
 					conn.disconnect();
 				}
 			} catch (IOException e2) {

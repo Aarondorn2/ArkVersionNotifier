@@ -41,7 +41,7 @@ public class AVNJobRunner {
 		
 		} catch (SchedulerException se) {
 			se.printStackTrace();
-		}
+		} 
 	}
 	
 	public static void stop() {
