@@ -89,7 +89,7 @@ public class AVNJobRunner {
 	
 	public static String checkStatus() {
 		String status = "Not Running any jobs";
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE hh:mm:ss"); //Name of day in week + time
 			
 		if (scheduler != null) {
 			try {

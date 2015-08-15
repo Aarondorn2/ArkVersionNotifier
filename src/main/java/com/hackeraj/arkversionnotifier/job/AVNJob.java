@@ -1,5 +1,7 @@
 package com.hackeraj.arkversionnotifier.job;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,10 +15,16 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import com.hackeraj.arkversionnotifier.datamodel.PreviousVersion;
+
+//TODO: FIX THE DANG FORMATTING!
+//TODO: finish the codings.
+
 public class AVNJob implements Job {
 	private static boolean normalSchedule = true;
 	private static final String arkBarURL = "https://api.ark.bar/v1/version";
 
+	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		JSONObject json = getJSON(arkBarURL);
 		System.out.println(json.toString());
@@ -31,19 +39,24 @@ public class AVNJob implements Job {
 			notifyAvailable(json);
 			
 			if (!normalSchedule) {
-				//check back to normal schedule
+				//change back to normal schedule
 				AVNJobRunner.scheduleJob(60, true);
 				normalSchedule = true;
 			}
-		} 
+		} else 
+		if (isETAUpdated(json)) {
+			notifyETAUpdated(json);
+		}
 	}
 
+	
 	private static boolean isUpcomingVersionAvailable(JSONObject json) {
 		boolean isAvailable = false;
 		try {
 			JSONObject upcoming = json.getJSONObject("upcoming");
 			if (!JSONObject.NULL.equals(upcoming.get("version"))) { //if version is not null, then a new one is available! :D
 				isAvailable = true;
+				updateUpcomingVersion(json);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -60,6 +73,9 @@ public class AVNJob implements Job {
 			String previousVersion = getPreviousVersion();
 			if (previousVersion.equals(currentVersion)) {
 				isAvailable = true;
+			} else 
+			if (previousVersion.isEmpty()) {
+				updatePreviousVersion(json);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -67,7 +83,54 @@ public class AVNJob implements Job {
 		
 		return isAvailable;
 	}
+	
+	private static boolean isETAUpdated(JSONObject json) {
+		boolean isUpdated = false;
+		try {
+			JSONObject upcoming = json.getJSONObject("upcoming");
+			String ETA = (String) upcoming.get("status");
+			String previousETA = getPreviousETA();
+			
+			if (previousETA.equalsIgnoreCase(ETA)) { 
+				isUpdated = true;
+			}
+			
+			if (isUpdated || previousETA.isEmpty()) {
+				updateUpcomingVersion(json);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return isUpdated;
+	}
+	
+	
+	private static String getPreviousVersion() {
+		String prevVersion = "";
+		
+		//go to DB for prevVersion
+		for (PreviousVersion pv : ofy().load().type(PreviousVersion.class).iterable()) {
+			prevVersion = pv.getVersionNumber();
+		}
+		
+		return prevVersion;
+	}
+	
+	private static String getPreviousETA() {
+		return "";
+	}
+	
+	
+	private static void updatePreviousVersion(JSONObject json) {
+		
+	}
+	
+	private static void updateUpcomingVersion(JSONObject json) {
+		
+	}
 
+	
 	private static void notifyAvailable(JSONObject json) {
 		sendEmails("");		
 	}
@@ -76,17 +139,14 @@ public class AVNJob implements Job {
 		sendEmails("");
 	}
 
+	private static void notifyETAUpdated(JSONObject json) {
+		sendEmails("");
+	}
+	
+
 	private static void sendEmails(String emailBody) {
 		//update version in DB also
 		//through Mandrill?
-	}
-	
-	private static String getPreviousVersion() {
-		String prevVersion = "";
-		
-		//go to DB for prevVersion
-		
-		return prevVersion;
 	}
 	
 
