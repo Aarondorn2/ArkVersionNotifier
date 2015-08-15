@@ -8,15 +8,15 @@ public class LocalRunner {
 	
 	public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
 		try {
-			NotificationJobRunner.start();
+			AVNJobRunner.start();
 			
 			Thread.sleep(13000);
 			
-			System.out.println(NotificationJobRunner.checkStatus());
+			System.out.println(AVNJobRunner.checkStatus());
 			
 			Thread.sleep(13000);
 			
-			NotificationJobRunner.stop();
+			AVNJobRunner.stop();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

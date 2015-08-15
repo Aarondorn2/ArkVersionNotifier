@@ -13,7 +13,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class NotificationJob implements Job {
+public class AVNJob implements Job {
 	private static boolean normalSchedule = true;
 	private static final String arkBarURL = "https://api.ark.bar/v1/version";
 
@@ -23,7 +23,7 @@ public class NotificationJob implements Job {
 
 		if (normalSchedule && isUpcomingVersionAvailable(json)) {
 			//check every 20 minutes until update is available!
-			NotificationJobRunner.scheduleJob(20, true);
+			AVNJobRunner.scheduleJob(20, true);
 			normalSchedule = false;
 			notifyUpcoming(json);
 		} else
@@ -32,7 +32,7 @@ public class NotificationJob implements Job {
 			
 			if (!normalSchedule) {
 				//check back to normal schedule
-				NotificationJobRunner.scheduleJob(60, true);
+				AVNJobRunner.scheduleJob(60, true);
 				normalSchedule = true;
 			}
 		} 
@@ -89,19 +89,8 @@ public class NotificationJob implements Job {
 		return prevVersion;
 	}
 	
-	
-	private static boolean local = false;
-	private static JSONObject getJSON(String stringUrl) {
-		if(local) {
-			try {
-				return new JSONObject("{\"current\":195.2,\"upcoming\":{\"version\":\"196.0\",\"status\":\"ETA: Tuesday Morning EDT\"}}");
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		stringUrl = "http://www.google.com";
-		
+
+	private static JSONObject getJSON(String stringUrl) {	
 		JSONObject json = null;
 		HttpURLConnection conn = null;
 		BufferedReader br = null;
@@ -113,26 +102,18 @@ public class NotificationJob implements Job {
 
 			URL url = new URL(stringUrl);
 			conn = (HttpURLConnection) url.openConnection();
-			System.out.println("got conn");
 
 			InputStream is = conn.getInputStream();
-			System.out.println("??");
-			
 			br = new BufferedReader(
                     new InputStreamReader(is));
-			System.out.println("?");
 			
 			while ((output = br.readLine()) != null) {
 				sb.append(output);
 			}
-
-			System.out.println(sb.toString());
 			
-//		    json = new JSONObject(sb.toString());
-//			System.out.println("got json: " + json.toString());
+		    json = new JSONObject(sb.toString());
+			System.out.println("got json: " + json.toString());
 
-			br.close();
-			conn.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {

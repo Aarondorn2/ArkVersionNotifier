@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hackeraj.arkversionnotifier.notificationjob.NotificationJobRunner;
+import com.hackeraj.arkversionnotifier.notificationjob.AVNJobRunner;
 
 public class NotificationJobServlet extends HttpServlet{
     
@@ -36,13 +36,13 @@ public class NotificationJobServlet extends HttpServlet{
 			if (action == null) {
 				writer.println("No action specified");
 			} else if (action.equalsIgnoreCase("start")) {
-				NotificationJobRunner.start();
+				AVNJobRunner.start();
 				writer.println("Job started");
 			} else if (action.equalsIgnoreCase("stop")) {
-				NotificationJobRunner.stop();
+				AVNJobRunner.stop();
 				writer.println("Job stopped");
 			} else if (action.equalsIgnoreCase("status")) {
-				writer.println(NotificationJobRunner.checkStatus());
+				writer.println(AVNJobRunner.checkStatus());
 			} else {
 				writer.println("Unknown action: " + action);
 			}

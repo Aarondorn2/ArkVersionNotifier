@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import com.hackeraj.arkversionnotifier.datamodel.Subscription;
+import com.hackeraj.arkversionnotifier.utils.Hash;
 
 public class SubscriptionServlet extends HttpServlet {
 
@@ -73,8 +74,9 @@ public class SubscriptionServlet extends HttpServlet {
 	}
 	
 	private void deleteSubscription(String email) {
+		
 		if (email != null) {
-			ofy().delete().keys(ofy().load().type(Subscription.class).filter("email", email).keys());
+			ofy().delete().keys(ofy().load().type(Subscription.class).filter("emailHash", Hash.getHash(email)).keys());
 		}
 	}
 	
