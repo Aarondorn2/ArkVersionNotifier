@@ -1,5 +1,7 @@
-package com.hackeraj.arkversionnotifier.notificationjob;
+package com.hackeraj.arkversionnotifier.job;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -117,6 +119,28 @@ public class AVNJobRunner {
 		}
 		
 		return status;
+	}
+	
+	
+	//Testing!
+	public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
+		try {
+			start();
+			
+			Thread.sleep(13000);
+			
+			System.out.println(checkStatus());
+			
+			Thread.sleep(13000);
+			
+			stop();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
 	}
 
 }

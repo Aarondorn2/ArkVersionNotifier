@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hackeraj.arkversionnotifier.notificationjob.AVNJobRunner;
+import com.hackeraj.arkversionnotifier.job.AVNJobRunner;
 
 public class NotificationJobServlet extends HttpServlet{
     
