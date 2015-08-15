@@ -7,11 +7,24 @@
       <servlet-name>subscriptionServlet</servlet-name>
       <servlet-class>com.hackeraj.arkversionnotifier.servlets.SubscriptionServlet</servlet-class>
     </servlet>
+	<servlet>
+      <servlet-name>AVNJobServlet</servlet-name>
+      <servlet-class>com.hackeraj.arkversionnotifier.servlets.AVNJobServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
       <servlet-name>subscriptionServlet</servlet-name>
       <url-pattern>/subscribe</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+      <servlet-name>AVNJobServlet</servlet-name>
+      <url-pattern>/AVNJob</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+      <servlet-name>AVNJobServlet</servlet-name>
+      <url-pattern>/avnjob</url-pattern>
+    </servlet-mapping>
+    
 
     <welcome-file-list>
         <welcome-file>subscribe.jsp</welcome-file>

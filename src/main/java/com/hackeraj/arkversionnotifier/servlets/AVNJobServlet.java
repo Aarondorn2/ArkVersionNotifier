@@ -10,14 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.hackeraj.arkversionnotifier.job.AVNJobRunner;
 
-public class NotificationJobServlet extends HttpServlet{
+public class AVNJobServlet extends HttpServlet{
     
 	private static final long serialVersionUID = -8368259585487096066L;
 
 	/**
      * @see HttpServlet#HttpServlet()
      */
-    public NotificationJobServlet() {
+    public AVNJobServlet() {
         super();
     }
 
