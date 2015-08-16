@@ -127,22 +127,12 @@ public class AVNJob implements Job {
 
 	
 	private static void notifyAvailable(ARKVersion newVersion, ARKVersion storedVersion) {
-		sendEmails("available");		
 	}
 
 	private static void notifyUpcoming(ARKVersion newVersion, ARKVersion storedVersion) {
-		sendEmails("upcoming");
 	}
 
 	private static void notifyETAUpdated(ARKVersion newVersion, ARKVersion storedVersion) {
-		sendEmails("eta");
-	}
-	
-
-	private static void sendEmails(String emailBody) {
-		System.out.println(emailBody);
-		//update version in DB also
-		//through Mandrill?
 	}
 	
 
