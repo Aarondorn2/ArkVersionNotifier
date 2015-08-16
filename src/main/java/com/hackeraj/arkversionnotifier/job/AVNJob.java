@@ -133,27 +133,48 @@ public class AVNJob implements Job {
 	
 	private static void notifyAvailable(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: New Version Available";
+		List<String> emails = getSubscribedEmails("available");
+		String emailBodyBegin = "";
+		String emailBodyEnd = "";
 		String emailBody = null;
 		
-		
-		Email.sendMail(emailSubject, emailBody, getSubscribedEmails("available"));
+		for (String email : emails) {
+			emailBody = emailBodyBegin + "" + emailBodyEnd;
+			Email.sendMail(emailSubject, emailBody, email);
+			
+		}
 	}
 
 	private static void notifyUpcoming(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: Upcoming Version Announced";
+		List<String> emails = getSubscribedEmails("upcoming");
+		String emailBodyBegin = "";
+		String emailBodyEnd = "";
 		String emailBody = null;
 		
-		
-		Email.sendMail(emailSubject, emailBody, getSubscribedEmails("upcoming"));
+		for (String email : emails) {
+			emailBody = emailBodyBegin + "" + emailBodyEnd;
+			Email.sendMail(emailSubject, emailBody, email);
+			
+		}
 	}
 
 	private static void notifyETAUpdated(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: New ETA for Upcoming Version";
+		List<String> emails = getSubscribedEmails("eta");
+		String emailBodyBegin = "";
+		String emailBodyEnd = "";
 		String emailBody = null;
 		
+		for (String email : emails) {
+			emailBody = emailBodyBegin + "" + emailBodyEnd;
+			Email.sendMail(emailSubject, emailBody, email);
+			
+		}
 		
-		Email.sendMail(emailSubject, emailBody, getSubscribedEmails("eta"));
+		
 	}
+	
 	
 	private static List<String> getSubscribedEmails(String type) {
 		List<String> emails = new ArrayList<String>();

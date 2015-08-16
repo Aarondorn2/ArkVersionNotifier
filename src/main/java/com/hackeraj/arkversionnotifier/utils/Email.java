@@ -1,6 +1,5 @@
 package com.hackeraj.arkversionnotifier.utils;
 
-import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -13,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 
 public class Email {
 
-	public static void sendMail(String subject, String body, List<String> recipients) {
+	public static void sendMail(String subject, String body, String recipient) {
 		Properties props = new Properties();
 		Session session = Session.getDefaultInstance(props, null);
 
@@ -24,9 +23,7 @@ public class Email {
 		    msg.setSubject(subject);
 		    msg.setContent(body, "text/html; charset=utf-8");
 		    
-		    for (String recipient : recipients) {
-			    msg.addRecipient(Message.RecipientType.BCC, new InternetAddress(recipient));
-		    }
+			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
 		    
 		    Transport.send(msg);
 
