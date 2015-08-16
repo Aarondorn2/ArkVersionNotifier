@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +19,9 @@ import org.quartz.JobExecutionException;
 
 import com.hackeraj.arkversionnotifier.datamodel.ARKVersion;
 import com.hackeraj.arkversionnotifier.datamodel.StoredJSON;
+import com.hackeraj.arkversionnotifier.datamodel.Subscription;
+import com.hackeraj.arkversionnotifier.utils.Email;
+import com.hackeraj.arkversionnotifier.utils.Encryption;
 
 //TODO: do the testings, send the emails.
 
@@ -127,12 +132,41 @@ public class AVNJob implements Job {
 
 	
 	private static void notifyAvailable(ARKVersion newVersion, ARKVersion storedVersion) {
+		String emailSubject = "ArkVersionNotification: New Version Available";
+		String emailBody = null;
+		
+		
+		Email.sendMail(emailSubject, emailBody, getSubscribedEmails("available"));
 	}
 
 	private static void notifyUpcoming(ARKVersion newVersion, ARKVersion storedVersion) {
+		String emailSubject = "ArkVersionNotification: Upcoming Version Announced";
+		String emailBody = null;
+		
+		
+		Email.sendMail(emailSubject, emailBody, getSubscribedEmails("upcoming"));
 	}
 
 	private static void notifyETAUpdated(ARKVersion newVersion, ARKVersion storedVersion) {
+		String emailSubject = "ArkVersionNotification: New ETA for Upcoming Version";
+		String emailBody = null;
+		
+		
+		Email.sendMail(emailSubject, emailBody, getSubscribedEmails("eta"));
+	}
+	
+	private static List<String> getSubscribedEmails(String type) {
+		List<String> emails = new ArrayList<String>();
+			
+		for (Subscription subscription : ofy().load().type(Subscription.class).iterable()) {
+			if (("available".equals(type) && subscription.getNotifyAvailable())
+				|| ("upcoming".equals(type) && subscription.getNotifyUpcoming())
+				|| ("eta".equals(type) && subscription.getNotifyETAChange())) {
+				emails.add(Encryption.decrypt(subscription.getEncryptedEmail()));
+			}
+		}
+		
+		return emails;
 	}
 	
 
