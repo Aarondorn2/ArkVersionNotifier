@@ -17,7 +17,7 @@ import org.quartz.JobExecutionException;
 import com.hackeraj.arkversionnotifier.datamodel.ARKVersion;
 import com.hackeraj.arkversionnotifier.datamodel.StoredJSON;
 
-//TODO: finish the codings.
+//TODO: do the testings, send the emails.
 
 public class AVNJob implements Job {
 	private static boolean normalSchedule = true;
@@ -41,7 +41,7 @@ public class AVNJob implements Job {
 				isStoredVersionUpdateNeeded = true;
 				
 				//check every 20 minutes until update is available!
-				AVNJobRunner.scheduleJob(20, true);
+				AVNJobRunner.scheduleJob(2, true);
 				normalSchedule = false;
 			} else
 			//if the update has been applied
@@ -51,7 +51,7 @@ public class AVNJob implements Job {
 				
 				if (!normalSchedule) {
 					//change back to normal schedule
-					AVNJobRunner.scheduleJob(60, true);
+					AVNJobRunner.scheduleJob(6, true);
 					normalSchedule = true;
 				}
 			} else 
@@ -130,7 +130,7 @@ public class AVNJob implements Job {
 		//through Mandrill?
 	}
 	
-
+	private static int switchNum = 1;
 	private static JSONObject getJSON(String stringUrl) {	
 		JSONObject json = null;
 		HttpURLConnection conn = null;

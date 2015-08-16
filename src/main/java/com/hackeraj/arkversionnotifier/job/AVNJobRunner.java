@@ -24,7 +24,7 @@ public class AVNJobRunner {
 	private static final String AVNJobName = "AVNJob";
 	private static final String AVNGroupName = "AVNGroup";
 
-	
+	//TODO: change to minutes not seconds (testing value), change to 60, not 6 (testing value)
 	public static void start() {
 		try {
 			if (scheduler == null) {
@@ -36,7 +36,7 @@ public class AVNJobRunner {
 				System.out.println("started scheduler");
 			}
 			
-			scheduleJob(60, false);
+			scheduleJob(6, false);
 			System.out.println("scheduled job");
 		
 		} catch (SchedulerException se) {
@@ -124,19 +124,19 @@ public class AVNJobRunner {
 	
 	//Testing!
 	public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
-//		try {
-//			start();
-//			
-//			Thread.sleep(13000);
-//			
-//			System.out.println(checkStatus());
-//			
-//			Thread.sleep(13000);
-//			
-//			stop();
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			start();
+			
+			Thread.sleep(30000);
+			
+			System.out.println(checkStatus());
+			
+//			Thread.sleep(30000);
+			
+			stop();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 	}
