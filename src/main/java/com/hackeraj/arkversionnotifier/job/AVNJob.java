@@ -48,7 +48,7 @@ public class AVNJob implements Job {
 				isStoredVersionUpdateNeeded = true;
 				
 				//check every 20 minutes until update is available!
-				AVNJobRunner.scheduleJob(2, true);
+				AVNJobRunner.scheduleJob(20, true);
 				normalSchedule = false;
 			} else
 			//if the update has been applied
@@ -58,7 +58,7 @@ public class AVNJob implements Job {
 				
 				if (!normalSchedule) {
 					//change back to normal schedule
-					AVNJobRunner.scheduleJob(6, true);
+					AVNJobRunner.scheduleJob(60, true);
 					normalSchedule = true;
 				}
 			} else 
