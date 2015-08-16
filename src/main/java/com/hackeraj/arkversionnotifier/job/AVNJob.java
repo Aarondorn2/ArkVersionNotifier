@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -22,6 +23,7 @@ import com.hackeraj.arkversionnotifier.datamodel.StoredJSON;
 public class AVNJob implements Job {
 	private static boolean normalSchedule = true;
 	private static final String arkBarURL = "https://api.ark.bar/v1/version";
+	private static StoredJSON cachedJSON = new StoredJSON();
 
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -70,18 +72,23 @@ public class AVNJob implements Job {
 	
 	
 	private static ARKVersion buildVersionFromJSON(JSONObject json) {
-		ARKVersion newVersion = null;
-		JSONObject upcoming = json.getJSONObject("upcoming");
+		ARKVersion newVersion = new ARKVersion();
 		
-		newVersion = new ARKVersion(
-				String.valueOf(json.get("current")),
-				"now",
-				new ARKVersion(
-						String.valueOf(upcoming.get("version")),
-						String.valueOf(upcoming.get("status")),
-						null
-						)
-				);
+		try {
+			JSONObject upcoming = json.getJSONObject("upcoming");
+
+			newVersion = new ARKVersion(
+					String.valueOf(json.get("current")),
+					"now",
+					new ARKVersion(
+							String.valueOf(upcoming.get("version")),
+							String.valueOf(upcoming.get("status")),
+							null
+							)
+					);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		
 		return newVersion;
 	}
@@ -90,9 +97,14 @@ public class AVNJob implements Job {
 	private static ARKVersion getStoredVersion() {
 		ARKVersion storedVersion = null;
 
-		//go to DB for storedJSON
-		for (StoredJSON storedJSON : ofy().load().type(StoredJSON.class).iterable()) {
-			storedVersion = buildVersionFromJSON(storedJSON.getJSON());
+		//get json from cache if available - save datastore call
+		if (!cachedJSON.getJSONString().isEmpty()) {
+			storedVersion = buildVersionFromJSON(cachedJSON.getJSON());
+		} else {
+			//if cache not available, go to DB for storedJSON
+			for (StoredJSON storedJSON : ofy().load().type(StoredJSON.class).iterable()) {
+				storedVersion = buildVersionFromJSON(storedJSON.getJSON());
+			}
 		}
 		
 		return storedVersion;
@@ -102,6 +114,9 @@ public class AVNJob implements Job {
 	private static void updateStoredVersion(JSONObject json) {
 		StoredJSON storedJSON = new StoredJSON();
 		storedJSON.setJSON(json);
+		
+		//update cache
+		cachedJSON.setJSON(json);
 		
 		//delete old record from DB
 		ofy().delete().keys(ofy().load().type(StoredJSON.class).keys());
@@ -130,9 +145,9 @@ public class AVNJob implements Job {
 		//through Mandrill?
 	}
 	
-	private static int switchNum = 1;
+
 	private static JSONObject getJSON(String stringUrl) {	
-		JSONObject json = null;
+		JSONObject json = new JSONObject("");
 		HttpURLConnection conn = null;
 		BufferedReader br = null;
 		String output = "";
