@@ -45,7 +45,7 @@ public class AVNJob implements Job {
 		} else {
 			//if first time an upcoming version is announced
 			if (normalSchedule && !newVersion.getUpcomingVersion().getVersionNumber().equals("null")) {
-				notifyUpcoming(newVersion, storedVersion);
+				notifyUpcoming(newVersion);
 				isStoredVersionUpdateNeeded = true;
 				
 				//check every 20 minutes until update is available!
@@ -135,24 +135,32 @@ public class AVNJob implements Job {
 	private static void notifyAvailable(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: New Version Available";
 		String unsubscribeLink = null;
+		String emailBody = EmailBodies.notifyAvailableEmailBody;
+		emailBody = emailBody.replace("::currentVersion", newVersion.getVersionNumber());
+		emailBody = emailBody.replace("::previousVersion", storedVersion.getVersionNumber());
 		
 		for (String emailAddress : getSubscribedEmailAddresses("available")) {
 			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
 			Email.sendMail(emailSubject, 
-					EmailBodies.notifyAvailableEmailBody + unsubscribeLink, 
+					emailBody + unsubscribeLink, 
 					emailAddress);
 			
 		}
 	}
 
-	private static void notifyUpcoming(ARKVersion newVersion, ARKVersion storedVersion) {
+	private static void notifyUpcoming(ARKVersion newVersion) {
 		String emailSubject = "ArkVersionNotification: Upcoming Version Announced";
 		String unsubscribeLink = null;
+		String emailBody = EmailBodies.notifyUpcomingEmailBody;
+		emailBody = emailBody.replace("::currentVersion", newVersion.getVersionNumber());
+		emailBody = emailBody.replace("::upcomingVersion", newVersion.getUpcomingVersion().getVersionNumber());
+		emailBody = emailBody.replace("::ETA", newVersion.getUpcomingVersion().getETA());
+		
 		
 		for (String emailAddress : getSubscribedEmailAddresses("upcoming")) {
 			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
 			Email.sendMail(emailSubject, 
-					EmailBodies.notifyUpcomingEmailBody + unsubscribeLink, 
+					emailBody + unsubscribeLink, 
 					emailAddress);
 			
 		}
@@ -161,11 +169,15 @@ public class AVNJob implements Job {
 	private static void notifyETAUpdated(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: New ETA for Upcoming Version";
 		String unsubscribeLink = null;
+		String emailBody = EmailBodies.notifyETAUpdatedEmailBody;
+		emailBody = emailBody.replace("::upcomingVersion", newVersion.getUpcomingVersion().getVersionNumber());
+		emailBody = emailBody.replace("::previousETA", storedVersion.getUpcomingVersion().getETA());
+		emailBody = emailBody.replace("::ETA", newVersion.getUpcomingVersion().getETA());
 		
 		for (String emailAddress : getSubscribedEmailAddresses("eta")) {
 			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
 			Email.sendMail(emailSubject, 
-					EmailBodies.notifyETAUpdatedEmailBody + unsubscribeLink, 
+					emailBody + unsubscribeLink, 
 					emailAddress);
 			
 		}
