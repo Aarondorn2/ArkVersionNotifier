@@ -124,21 +124,19 @@ public class AVNJobRunner {
 	
 	//Testing!
 	public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
-		try {
-			start();
-			
-			Thread.sleep(13000);
-			
-			System.out.println(checkStatus());
-			
-			Thread.sleep(13000);
-			
-			stop();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		
+//		try {
+//			start();
+//			
+//			Thread.sleep(13000);
+//			
+//			System.out.println(checkStatus());
+//			
+//			Thread.sleep(13000);
+//			
+//			stop();
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 		
 		
 	}

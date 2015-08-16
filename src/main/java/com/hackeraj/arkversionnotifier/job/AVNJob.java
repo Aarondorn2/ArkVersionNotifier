@@ -9,15 +9,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import com.hackeraj.arkversionnotifier.datamodel.PreviousVersion;
+import com.hackeraj.arkversionnotifier.datamodel.ARKVersion;
+import com.hackeraj.arkversionnotifier.datamodel.StoredJSON;
 
-//TODO: FIX THE DANG FORMATTING!
 //TODO: finish the codings.
 
 public class AVNJob implements Job {
@@ -26,125 +25,107 @@ public class AVNJob implements Job {
 
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+		boolean isStoredVersionUpdateNeeded = false;
+		
 		JSONObject json = getJSON(arkBarURL);
-		System.out.println(json.toString());
-
-		if (normalSchedule && isUpcomingVersionAvailable(json)) {
-			//check every 20 minutes until update is available!
-			AVNJobRunner.scheduleJob(20, true);
-			normalSchedule = false;
-			notifyUpcoming(json);
-		} else
-		if (isUpdateAvailable(json)) {
-			notifyAvailable(json);
-			
-			if (!normalSchedule) {
-				//change back to normal schedule
-				AVNJobRunner.scheduleJob(60, true);
-				normalSchedule = true;
-			}
-		} else 
-		if (isETAUpdated(json)) {
-			notifyETAUpdated(json);
-		}
-	}
-
-	
-	private static boolean isUpcomingVersionAvailable(JSONObject json) {
-		boolean isAvailable = false;
-		try {
-			JSONObject upcoming = json.getJSONObject("upcoming");
-			if (!JSONObject.NULL.equals(upcoming.get("version"))) { //if version is not null, then a new one is available! :D
-				isAvailable = true;
-				updateUpcomingVersion(json);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		ARKVersion newVersion = buildVersionFromJSON(json);
+		ARKVersion storedVersion = getStoredVersion();
 		
-		return isAvailable;
-	}
-
-	private static boolean isUpdateAvailable(JSONObject json) {
-		boolean isAvailable = false;
-		try {
-			String currentVersion = (String) json.get("current");
-			System.out.println(currentVersion.toString());
-			String previousVersion = getPreviousVersion();
-			if (previousVersion.equals(currentVersion)) {
-				isAvailable = true;
+		//if there isn't a stored version, simply update the stored version.
+		if (storedVersion == null) {
+			isStoredVersionUpdateNeeded = true;
+		} else {
+			//if first time an upcoming version is announced
+			if (normalSchedule && !newVersion.getUpcomingVersion().getVersionNumber().equals("null")) {
+				notifyUpcoming(newVersion, storedVersion);
+				isStoredVersionUpdateNeeded = true;
+				
+				//check every 20 minutes until update is available!
+				AVNJobRunner.scheduleJob(20, true);
+				normalSchedule = false;
+			} else
+			//if the update has been applied
+			if (!newVersion.getVersionNumber().equals(storedVersion.getVersionNumber())) {
+				notifyAvailable(newVersion, storedVersion);
+				isStoredVersionUpdateNeeded = true;
+				
+				if (!normalSchedule) {
+					//change back to normal schedule
+					AVNJobRunner.scheduleJob(60, true);
+					normalSchedule = true;
+				}
 			} else 
-			if (previousVersion.isEmpty()) {
-				updatePreviousVersion(json);
+			//if the ETA for an upcoming version was announced
+			if (!newVersion.getUpcomingVersion().getETA().equals(storedVersion.getUpcomingVersion().getETA())) {
+				notifyETAUpdated(newVersion, storedVersion);
+				isStoredVersionUpdateNeeded = true;
 			}
-		} catch (JSONException e) {
-			e.printStackTrace();
 		}
 		
-		return isAvailable;
+		
+		if (isStoredVersionUpdateNeeded) {
+			updateStoredVersion(json);
+		}
+	}	
+	
+	
+	private static ARKVersion buildVersionFromJSON(JSONObject json) {
+		ARKVersion newVersion = null;
+		JSONObject upcoming = json.getJSONObject("upcoming");
+		
+		newVersion = new ARKVersion(
+				String.valueOf(json.get("current")),
+				"now",
+				new ARKVersion(
+						String.valueOf(upcoming.get("version")),
+						String.valueOf(upcoming.get("status")),
+						null
+						)
+				);
+		
+		return newVersion;
 	}
 	
-	private static boolean isETAUpdated(JSONObject json) {
-		boolean isUpdated = false;
-		try {
-			JSONObject upcoming = json.getJSONObject("upcoming");
-			String ETA = (String) upcoming.get("status");
-			String previousETA = getPreviousETA();
-			
-			if (previousETA.equalsIgnoreCase(ETA)) { 
-				isUpdated = true;
-			}
-			
-			if (isUpdated || previousETA.isEmpty()) {
-				updateUpcomingVersion(json);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+	
+	private static ARKVersion getStoredVersion() {
+		ARKVersion storedVersion = null;
+
+		//go to DB for storedJSON
+		for (StoredJSON storedJSON : ofy().load().type(StoredJSON.class).iterable()) {
+			storedVersion = buildVersionFromJSON(storedJSON.getJSON());
 		}
 		
-		return isUpdated;
-	}
-	
-	
-	private static String getPreviousVersion() {
-		String prevVersion = "";
-		
-		//go to DB for prevVersion
-		for (PreviousVersion pv : ofy().load().type(PreviousVersion.class).iterable()) {
-			prevVersion = pv.getVersionNumber();
-		}
-		
-		return prevVersion;
-	}
-	
-	private static String getPreviousETA() {
-		return "";
-	}
-	
-	
-	private static void updatePreviousVersion(JSONObject json) {
-		
-	}
-	
-	private static void updateUpcomingVersion(JSONObject json) {
-		
+		return storedVersion;
 	}
 
 	
-	private static void notifyAvailable(JSONObject json) {
-		sendEmails("");		
+	private static void updateStoredVersion(JSONObject json) {
+		StoredJSON storedJSON = new StoredJSON();
+		storedJSON.setJSON(json);
+		
+		//delete old record from DB
+		ofy().delete().keys(ofy().load().type(StoredJSON.class).keys());
+
+		//add new one
+		ofy().save().entity(storedJSON);
 	}
 
-	private static void notifyUpcoming(JSONObject json) {
-		sendEmails("");
+	
+	private static void notifyAvailable(ARKVersion newVersion, ARKVersion storedVersion) {
+		sendEmails("available");		
 	}
 
-	private static void notifyETAUpdated(JSONObject json) {
-		sendEmails("");
+	private static void notifyUpcoming(ARKVersion newVersion, ARKVersion storedVersion) {
+		sendEmails("upcoming");
+	}
+
+	private static void notifyETAUpdated(ARKVersion newVersion, ARKVersion storedVersion) {
+		sendEmails("eta");
 	}
 	
 
 	private static void sendEmails(String emailBody) {
+		System.out.println(emailBody);
 		//update version in DB also
 		//through Mandrill?
 	}
