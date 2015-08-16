@@ -21,6 +21,7 @@ import com.hackeraj.arkversionnotifier.datamodel.ARKVersion;
 import com.hackeraj.arkversionnotifier.datamodel.StoredJSON;
 import com.hackeraj.arkversionnotifier.datamodel.Subscription;
 import com.hackeraj.arkversionnotifier.utils.Email;
+import com.hackeraj.arkversionnotifier.utils.EmailBodies;
 import com.hackeraj.arkversionnotifier.utils.Encryption;
 
 //TODO: do the testings, send the emails.
@@ -133,42 +134,39 @@ public class AVNJob implements Job {
 	
 	private static void notifyAvailable(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: New Version Available";
-		List<String> emails = getSubscribedEmails("available");
-		String emailBodyBegin = "";
-		String emailBodyEnd = "";
-		String emailBody = null;
+		String unsubscribeLink = null;
 		
-		for (String email : emails) {
-			emailBody = emailBodyBegin + "" + emailBodyEnd;
-			Email.sendMail(emailSubject, emailBody, email);
+		for (String emailAddress : getSubscribedEmailAddresses("available")) {
+			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
+			Email.sendMail(emailSubject, 
+					EmailBodies.notifyAvailableEmailBody + unsubscribeLink, 
+					emailAddress);
 			
 		}
 	}
 
 	private static void notifyUpcoming(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: Upcoming Version Announced";
-		List<String> emails = getSubscribedEmails("upcoming");
-		String emailBodyBegin = "";
-		String emailBodyEnd = "";
-		String emailBody = null;
+		String unsubscribeLink = null;
 		
-		for (String email : emails) {
-			emailBody = emailBodyBegin + "" + emailBodyEnd;
-			Email.sendMail(emailSubject, emailBody, email);
+		for (String emailAddress : getSubscribedEmailAddresses("upcoming")) {
+			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
+			Email.sendMail(emailSubject, 
+					EmailBodies.notifyUpcomingEmailBody + unsubscribeLink, 
+					emailAddress);
 			
 		}
 	}
 
 	private static void notifyETAUpdated(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: New ETA for Upcoming Version";
-		List<String> emails = getSubscribedEmails("eta");
-		String emailBodyBegin = "";
-		String emailBodyEnd = "";
-		String emailBody = null;
+		String unsubscribeLink = null;
 		
-		for (String email : emails) {
-			emailBody = emailBodyBegin + "" + emailBodyEnd;
-			Email.sendMail(emailSubject, emailBody, email);
+		for (String emailAddress : getSubscribedEmailAddresses("eta")) {
+			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
+			Email.sendMail(emailSubject, 
+					EmailBodies.notifyETAUpdatedEmailBody + unsubscribeLink, 
+					emailAddress);
 			
 		}
 		
@@ -176,7 +174,7 @@ public class AVNJob implements Job {
 	}
 	
 	
-	private static List<String> getSubscribedEmails(String type) {
+	private static List<String> getSubscribedEmailAddresses(String type) {
 		List<String> emails = new ArrayList<String>();
 			
 		for (Subscription subscription : ofy().load().type(Subscription.class).iterable()) {
