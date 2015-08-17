@@ -17,6 +17,8 @@ import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
 
+import com.hackeraj.arkversionnotifier.utils.Utils;
+
 public class AVNJobRunner {
 	private static Scheduler scheduler = null;
 	
@@ -57,6 +59,7 @@ public class AVNJobRunner {
 	
 	
 	public static void scheduleJob(int time, boolean overwrite) {
+		Trigger avnTrigger = null;
 	
 		try {
 			if(overwrite) {
@@ -64,13 +67,23 @@ public class AVNJobRunner {
 				scheduler.unscheduleJob(new TriggerKey(AVNTriggerName, AVNGroupName));
 			}
 		 
-			Trigger avnTrigger = TriggerBuilder
-						.newTrigger()
-						.withIdentity(AVNTriggerName, AVNGroupName)
-						.withSchedule(
-						    SimpleScheduleBuilder.simpleSchedule()
-							.withIntervalInMinutes(time).repeatForever())
-						.build();
+			if (Utils.isDevEnv()) {
+				avnTrigger = TriggerBuilder
+							.newTrigger()
+							.withIdentity(AVNTriggerName, AVNGroupName)
+							.withSchedule(
+							    SimpleScheduleBuilder.simpleSchedule()
+								.withIntervalInSeconds(time).repeatForever())
+							.build();
+			} else {
+				avnTrigger = TriggerBuilder
+							.newTrigger()
+							.withIdentity(AVNTriggerName, AVNGroupName)
+							.withSchedule(
+							    SimpleScheduleBuilder.simpleSchedule()
+								.withIntervalInMinutes(time).repeatForever())
+							.build();
+			}
 	
 			System.out.println("built trigger");
 	

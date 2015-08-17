@@ -23,6 +23,7 @@ import com.hackeraj.arkversionnotifier.datamodel.Subscription;
 import com.hackeraj.arkversionnotifier.utils.Email;
 import com.hackeraj.arkversionnotifier.utils.EmailBodies;
 import com.hackeraj.arkversionnotifier.utils.Encryption;
+import com.hackeraj.arkversionnotifier.utils.Utils;
 
 //TODO: do the testings, send the emails.
 
@@ -77,6 +78,7 @@ public class AVNJob implements Job {
 	}	
 	
 	
+	private static int devIncrementer = 0;
 	private static ARKVersion buildVersionFromJSON(JSONObject json) {
 		ARKVersion newVersion = new ARKVersion();
 		
@@ -94,6 +96,23 @@ public class AVNJob implements Job {
 					);
 		} catch (JSONException e) {
 			e.printStackTrace();
+		}
+
+		
+		//if dev, vary results returned.
+		if (Utils.isDevEnv()) {
+			if (devIncrementer == 1) {
+				double currentVersionNumber = Double.valueOf(newVersion.getVersionNumber());
+				newVersion.getUpcomingVersion().setVersionNumber(String.valueOf(currentVersionNumber + 1D));
+			} else if (devIncrementer == 2) {
+				double currentVersionNumber = Double.valueOf(newVersion.getVersionNumber());
+				newVersion.getUpcomingVersion().setVersionNumber(String.valueOf(currentVersionNumber + 1D));
+				newVersion.getUpcomingVersion().setETA("ETA: Soon");
+			} else if (devIncrementer == 3) {
+				double currentVersionNumber = Double.valueOf(newVersion.getVersionNumber());
+				newVersion.setVersionNumber(String.valueOf(currentVersionNumber + 1D));
+			}
+			devIncrementer++;
 		}
 		
 		return newVersion;
@@ -202,7 +221,7 @@ public class AVNJob implements Job {
 	
 
 	private static JSONObject getJSON(String stringUrl) {	
-		JSONObject json = new JSONObject("");
+		JSONObject json = new JSONObject();
 		HttpURLConnection conn = null;
 		BufferedReader br = null;
 		String output = "";
