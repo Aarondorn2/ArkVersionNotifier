@@ -13,9 +13,6 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import com.hackeraj.arkversionnotifier.datamodel.ARKVersion;
 import com.hackeraj.arkversionnotifier.datamodel.StoredJSON;
@@ -27,13 +24,14 @@ import com.hackeraj.arkversionnotifier.utils.Utils;
 
 //TODO: do the testings, send the emails.
 
-public class AVNJob implements Job {
-	private static boolean normalSchedule = true;
+public class AVNJob {
+	private static boolean checkEvery20 = false;
+	private static int invokeCount = 0;
 	private static final String arkBarURL = "https://api.ark.bar/v1/version";
 	private static StoredJSON cachedJSON = new StoredJSON();
 
 	
-	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+	public static void execute() {
 		boolean isStoredVersionUpdateNeeded = false;
 		
 		JSONObject json = getJSON(arkBarURL);
@@ -44,30 +42,32 @@ public class AVNJob implements Job {
 		if (storedVersion == null) {
 			isStoredVersionUpdateNeeded = true;
 		} else {
-			//if first time an upcoming version is announced
-			if (normalSchedule && !newVersion.getUpcomingVersion().getVersionNumber().equals("null")) {
-				notifyUpcoming(newVersion);
-				isStoredVersionUpdateNeeded = true;
-				
-				//check every 20 minutes until update is available!
-				AVNJobRunner.scheduleJob(20, true);
-				normalSchedule = false;
-			} else
-			//if the update has been applied
-			if (!newVersion.getVersionNumber().equals(storedVersion.getVersionNumber())) {
-				notifyAvailable(newVersion, storedVersion);
-				isStoredVersionUpdateNeeded = true;
-				
-				if (!normalSchedule) {
-					//change back to normal schedule
-					AVNJobRunner.scheduleJob(60, true);
-					normalSchedule = true;
+			
+			if (checkEvery20 || invokeCount++ % 3 == 0) {
+				//if first time an upcoming version is announced
+				if (!checkEvery20 && !newVersion.getUpcomingVersion().getVersionNumber().equals("null")) {
+					notifyUpcoming(newVersion);
+					isStoredVersionUpdateNeeded = true;
+					
+					//check every 20 minutes until update is available!
+					checkEvery20 = true;
+				} else
+				//if the update has been applied
+				if (!newVersion.getVersionNumber().equals(storedVersion.getVersionNumber())) {
+					notifyAvailable(newVersion, storedVersion);
+					isStoredVersionUpdateNeeded = true;
+					
+					if (checkEvery20) {
+						//change back to checking very 60 minutes
+						checkEvery20 = false;
+					}
+				} else 
+				//if the ETA for an upcoming version was announced
+				if (!newVersion.getUpcomingVersion().getETA().equals(storedVersion.getUpcomingVersion().getETA())) {
+					notifyETAUpdated(newVersion, storedVersion);
+					isStoredVersionUpdateNeeded = true;
 				}
-			} else 
-			//if the ETA for an upcoming version was announced
-			if (!newVersion.getUpcomingVersion().getETA().equals(storedVersion.getUpcomingVersion().getETA())) {
-				notifyETAUpdated(newVersion, storedVersion);
-				isStoredVersionUpdateNeeded = true;
+				
 			}
 		}
 		

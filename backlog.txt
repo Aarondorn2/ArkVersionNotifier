@@ -1,0 +1,5 @@
+Things I want to add:
+
+-Patch Notes in email
+-mocking (run any piece locally without server instance)
+-unit testing 
