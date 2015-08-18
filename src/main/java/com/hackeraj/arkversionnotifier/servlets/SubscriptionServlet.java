@@ -1,7 +1,5 @@
 package com.hackeraj.arkversionnotifier.servlets;
 
-import static com.googlecode.objectify.ObjectifyService.ofy;
-
 import java.io.IOException;
 
 import javax.servlet.http.HttpServlet;
@@ -11,17 +9,23 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import com.hackeraj.arkversionnotifier.datamodel.Subscription;
-import com.hackeraj.arkversionnotifier.utils.Hash;
+import com.hackeraj.arkversionnotifier.mocking.MockDataManager;
+import com.hackeraj.arkversionnotifier.mocking.MockingUtils;
+import com.hackeraj.arkversionnotifier.utils.DataManager;
 
 public class SubscriptionServlet extends HttpServlet {
+	
+	private static final DataManager dataManager = 
+			MockingUtils.isMocking()
+			? new DataManager()
+			: new MockDataManager();
 
 	private static final long serialVersionUID = 712010313100708028L;
 	
 	@Override
 	  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-	    Subscription subscription;
-
-	    
+				
+	    Subscription subscription = null;
 	    String email = req.getParameter("email");
 	    String[] subscriptionChoices = req.getParameterValues("subscriptionChoices");
 	    boolean notifyUpcoming = false;
@@ -49,10 +53,11 @@ public class SubscriptionServlet extends HttpServlet {
 					notifyAvailable);
 		    
 		    //get previous entities for this email address if any
-		    deleteSubscription(email);
+		    dataManager.deleteSubscription(email);
 
-	    	ofy().save().entity(subscription); //subscribe new entity
-
+	    	//subscribe new entity
+	    	dataManager.saveSubscription(subscription);
+	    
 		    
 		    resp.sendRedirect("/success.jsp");
 	    } else {
@@ -68,16 +73,9 @@ public class SubscriptionServlet extends HttpServlet {
 		if("unsubscribe".equals(req.getParameter("type"))) {
 			String email = req.getParameter("email");
 
-			deleteSubscription(email);
+			dataManager.deleteSubscription(email);
 		}
 		resp.sendRedirect("/subscribe.jsp?unsubscribe=true");
-	}
-	
-	private void deleteSubscription(String email) {
-		
-		if (email != null) {
-			ofy().delete().keys(ofy().load().type(Subscription.class).filter("emailHash", Hash.getHash(email)).keys());
-		}
 	}
 	
 }

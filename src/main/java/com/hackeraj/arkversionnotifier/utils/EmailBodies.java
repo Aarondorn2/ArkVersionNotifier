@@ -3,6 +3,7 @@ package com.hackeraj.arkversionnotifier.utils;
 public class EmailBodies {
 	public static final String disclaimer = "This email notificaiton has been auto-generated. Please do not reply to this email.  If you would no longer like to receive these notifications, please";
 
+	//TODO: add link to patch notes
 	public static final String notifyAvailableEmailBody = 
 			"A new version has been released for ARK: Survival Evolved! <br /> <br />" +
 			"<b>The current version is now: ::currentVersion </b><br />" +

@@ -1,13 +1,5 @@
 package com.hackeraj.arkversionnotifier.job;
 
-import static com.googlecode.objectify.ObjectifyService.ofy;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,24 +9,37 @@ import org.json.JSONObject;
 import com.hackeraj.arkversionnotifier.datamodel.ARKVersion;
 import com.hackeraj.arkversionnotifier.datamodel.StoredJSON;
 import com.hackeraj.arkversionnotifier.datamodel.Subscription;
+import com.hackeraj.arkversionnotifier.mocking.MockArkBarClient;
+import com.hackeraj.arkversionnotifier.mocking.MockDataManager;
+import com.hackeraj.arkversionnotifier.mocking.MockingUtils;
+import com.hackeraj.arkversionnotifier.utils.ArkBarClient;
+import com.hackeraj.arkversionnotifier.utils.DataManager;
 import com.hackeraj.arkversionnotifier.utils.Email;
 import com.hackeraj.arkversionnotifier.utils.EmailBodies;
 import com.hackeraj.arkversionnotifier.utils.Encryption;
-import com.hackeraj.arkversionnotifier.utils.Utils;
 
-//TODO: do the testings, send the emails.
+//TODO: do the testings.
 
 public class AVNJob {
+	
+	private static final DataManager dataManager = 
+			!MockingUtils.isMocking()
+			? new DataManager()
+			: new MockDataManager();
+	private static final ArkBarClient arkBarClient = 
+			!MockingUtils.isMocking()
+			? new ArkBarClient()
+			: new MockArkBarClient();
+	
 	private static boolean checkEvery20 = false;
 	private static int invokeCount = 0;
-	private static final String arkBarURL = "https://api.ark.bar/v1/version";
 	private static StoredJSON cachedJSON = new StoredJSON();
 
 	
 	public static void execute() {
 		boolean isStoredVersionUpdateNeeded = false;
 		
-		JSONObject json = getJSON(arkBarURL);
+		JSONObject json = arkBarClient.getJSON();
 		ARKVersion newVersion = buildVersionFromJSON(json);
 		ARKVersion storedVersion = getStoredVersion();
 		
@@ -42,6 +47,8 @@ public class AVNJob {
 		if (storedVersion == null) {
 			isStoredVersionUpdateNeeded = true;
 		} else {
+			
+			System.out.println("execute -> invokeCount = " + invokeCount);
 			
 			if (checkEvery20 || invokeCount++ % 3 == 0) {
 				//if first time an upcoming version is announced
@@ -78,7 +85,6 @@ public class AVNJob {
 	}	
 	
 	
-	private static int devIncrementer = 0;
 	private static ARKVersion buildVersionFromJSON(JSONObject json) {
 		ARKVersion newVersion = new ARKVersion();
 		
@@ -97,23 +103,6 @@ public class AVNJob {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
-		
-		//if dev, vary results returned.
-		if (Utils.isDevEnv()) {
-			if (devIncrementer == 1) {
-				double currentVersionNumber = Double.valueOf(newVersion.getVersionNumber());
-				newVersion.getUpcomingVersion().setVersionNumber(String.valueOf(currentVersionNumber + 1D));
-			} else if (devIncrementer == 2) {
-				double currentVersionNumber = Double.valueOf(newVersion.getVersionNumber());
-				newVersion.getUpcomingVersion().setVersionNumber(String.valueOf(currentVersionNumber + 1D));
-				newVersion.getUpcomingVersion().setETA("ETA: Soon");
-			} else if (devIncrementer == 3) {
-				double currentVersionNumber = Double.valueOf(newVersion.getVersionNumber());
-				newVersion.setVersionNumber(String.valueOf(currentVersionNumber + 1D));
-			}
-			devIncrementer++;
-		}
 		
 		return newVersion;
 	}
@@ -127,7 +116,7 @@ public class AVNJob {
 			storedVersion = buildVersionFromJSON(cachedJSON.getJSON());
 		} else {
 			//if cache not available, go to DB for storedJSON
-			for (StoredJSON storedJSON : ofy().load().type(StoredJSON.class).iterable()) {
+			for (StoredJSON storedJSON : dataManager.getStoredJSON()) {
 				storedVersion = buildVersionFromJSON(storedJSON.getJSON());
 			}
 		}
@@ -144,10 +133,10 @@ public class AVNJob {
 		cachedJSON.setJSON(json);
 		
 		//delete old record from DB
-		ofy().delete().keys(ofy().load().type(StoredJSON.class).keys());
-
+		dataManager.deleteStoredJSON();
+		
 		//add new one
-		ofy().save().entity(storedJSON);
+		dataManager.saveStoredJSON(storedJSON);
 	}
 
 	
@@ -208,7 +197,7 @@ public class AVNJob {
 	private static List<String> getSubscribedEmailAddresses(String type) {
 		List<String> emails = new ArrayList<String>();
 			
-		for (Subscription subscription : ofy().load().type(Subscription.class).iterable()) {
+		for (Subscription subscription : dataManager.getSubscriptions()) {
 			if (("available".equals(type) && subscription.getNotifyAvailable())
 				|| ("upcoming".equals(type) && subscription.getNotifyUpcoming())
 				|| ("eta".equals(type) && subscription.getNotifyETAChange())) {
@@ -220,46 +209,6 @@ public class AVNJob {
 	}
 	
 
-	private static JSONObject getJSON(String stringUrl) {	
-		JSONObject json = new JSONObject();
-		HttpURLConnection conn = null;
-		BufferedReader br = null;
-		String output = "";
-	    StringBuilder sb = new StringBuilder();
-	    
-		try {
-			System.out.println("attempting to get json from URL: " + stringUrl);
-
-			URL url = new URL(stringUrl);
-			conn = (HttpURLConnection) url.openConnection();
-
-			InputStream is = conn.getInputStream();
-			br = new BufferedReader(
-                    new InputStreamReader(is));
-			
-			while ((output = br.readLine()) != null) {
-				sb.append(output);
-			}
-			
-		    json = new JSONObject(sb.toString());
-			System.out.println("got json: " + json.toString());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			try {
-				if (br != null) {
-					br.close();
-				}
-				if (conn != null) { 
-					conn.disconnect();
-				}
-			} catch (IOException e2) {
-				e2.printStackTrace();
-			}
-			
-		}
-		
-		return json;
-	}
+	
 	
 }
