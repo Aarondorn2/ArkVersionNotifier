@@ -16,7 +16,7 @@ import com.hackeraj.arkversionnotifier.utils.DataManager;
 public class SubscriptionServlet extends HttpServlet {
 	
 	private static final DataManager dataManager = 
-			MockingUtils.isMocking()
+			!MockingUtils.isMocking()
 			? new DataManager()
 			: new MockDataManager();
 

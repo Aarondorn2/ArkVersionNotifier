@@ -11,11 +11,12 @@ import com.hackeraj.arkversionnotifier.datamodel.StoredJSON;
 import com.hackeraj.arkversionnotifier.datamodel.Subscription;
 import com.hackeraj.arkversionnotifier.mocking.MockArkBarClient;
 import com.hackeraj.arkversionnotifier.mocking.MockDataManager;
+import com.hackeraj.arkversionnotifier.mocking.MockEmailManager;
 import com.hackeraj.arkversionnotifier.mocking.MockingUtils;
 import com.hackeraj.arkversionnotifier.utils.ArkBarClient;
 import com.hackeraj.arkversionnotifier.utils.DataManager;
-import com.hackeraj.arkversionnotifier.utils.Email;
 import com.hackeraj.arkversionnotifier.utils.EmailBodies;
+import com.hackeraj.arkversionnotifier.utils.EmailManager;
 import com.hackeraj.arkversionnotifier.utils.Encryption;
 
 //TODO: do the testings.
@@ -26,6 +27,10 @@ public class AVNJob {
 			!MockingUtils.isMocking()
 			? new DataManager()
 			: new MockDataManager();
+	private static final EmailManager emailManager = 
+			!MockingUtils.isMocking()
+			? new EmailManager()
+			: new MockEmailManager();
 	private static final ArkBarClient arkBarClient = 
 			!MockingUtils.isMocking()
 			? new ArkBarClient()
@@ -149,7 +154,7 @@ public class AVNJob {
 		
 		for (String emailAddress : getSubscribedEmailAddresses("available")) {
 			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
-			Email.sendMail(emailSubject, 
+			emailManager.sendMail(emailSubject, 
 					emailBody + unsubscribeLink, 
 					emailAddress);
 			
@@ -167,7 +172,7 @@ public class AVNJob {
 		
 		for (String emailAddress : getSubscribedEmailAddresses("upcoming")) {
 			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
-			Email.sendMail(emailSubject, 
+			emailManager.sendMail(emailSubject, 
 					emailBody + unsubscribeLink, 
 					emailAddress);
 			
@@ -184,7 +189,7 @@ public class AVNJob {
 		
 		for (String emailAddress : getSubscribedEmailAddresses("eta")) {
 			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
-			Email.sendMail(emailSubject, 
+			emailManager.sendMail(emailSubject, 
 					emailBody + unsubscribeLink, 
 					emailAddress);
 			

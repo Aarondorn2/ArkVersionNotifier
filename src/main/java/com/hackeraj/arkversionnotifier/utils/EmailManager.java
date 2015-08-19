@@ -10,9 +10,9 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class Email {
+public class EmailManager {
 
-	public static void sendMail(String subject, String body, String recipient) {
+	public void sendMail(String subject, String body, String recipient) {
 		Properties props = new Properties();
 		Session session = Session.getDefaultInstance(props, null);
 

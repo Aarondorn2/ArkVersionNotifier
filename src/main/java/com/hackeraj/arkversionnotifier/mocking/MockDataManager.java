@@ -1,5 +1,6 @@
 package com.hackeraj.arkversionnotifier.mocking;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,27 +31,38 @@ public class MockDataManager extends DataManager{
 			public QueryResultIterator<Subscription> iterator() {
 				return new QueryResultIterator<Subscription>() {
 
+					private int incr = 0;
+					private List<Subscription> subscriptionList = buildSubscriptionList();
+					
+					private List<Subscription> buildSubscriptionList() {
+						List<Subscription> list = new ArrayList<Subscription>();
+						
+						for (Subscription sub : subscriptions.values()) {
+							list.add(sub);
+						}
+						
+						return list;
+					}
+					
 					@Override
 					public boolean hasNext() {
-						// TODO Auto-generated method stub
-						return false;
+						return incr++ < subscriptions.size();
 					}
 
 					@Override
 					public Subscription next() {
-						// TODO Auto-generated method stub
-						return null;
+						return subscriptionList.get(incr -1);
 					}
 
 					@Override
 					public Cursor getCursor() {
-						// TODO Auto-generated method stub
+						// not used
 						return null;
 					}
 
 					@Override
 					public List<Index> getIndexList() {
-						// TODO Auto-generated method stub
+						// not used
 						return null;
 					}
 				};
@@ -78,11 +90,12 @@ public class MockDataManager extends DataManager{
 			@Override
 			public QueryResultIterator<StoredJSON> iterator() {
 				return new QueryResultIterator<StoredJSON>() {
+					
+					private int incr = 0;
 
 					@Override
 					public boolean hasNext() {
-						// TODO Auto-generated method stub
-						return false;
+						return JSON != null && incr++ < 1;
 					}
 
 					@Override
@@ -92,13 +105,13 @@ public class MockDataManager extends DataManager{
 
 					@Override
 					public Cursor getCursor() {
-						// TODO Auto-generated method stub
+						// not used
 						return null;
 					}
 
 					@Override
 					public List<Index> getIndexList() {
-						// TODO Auto-generated method stub
+						// not used
 						return null;
 					}
 				};
@@ -111,4 +124,5 @@ public class MockDataManager extends DataManager{
 		JSON = null;
 	}
 
+	
 }
