@@ -55,7 +55,7 @@ public class AVNJob {
 			
 			if (checkEvery20 || invokeCount++ % 3 == 0) {
 				//if first time an upcoming version is announced
-				if (!checkEvery20 && !newVersion.getUpcomingVersion().getVersionNumber().equals("null")) {
+				if (!checkEvery20 && !newVersion.getUpcomingVersion().getVersionNumber().equals("not available")) {
 					notifyUpcoming(newVersion);
 					isStoredVersionUpdateNeeded = true;
 					

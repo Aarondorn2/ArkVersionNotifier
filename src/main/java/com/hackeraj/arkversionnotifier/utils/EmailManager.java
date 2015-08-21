@@ -16,7 +16,6 @@ public class EmailManager {
 	public void sendMail(String subject, String body, List<String> recipients) {
 		Properties properties = new Properties();
 		Session session = Session.getDefaultInstance(properties, null);
-		String unsubscribeLink = null;
 
 		try {
 		    Message msg = new MimeMessage(session);
@@ -25,9 +24,8 @@ public class EmailManager {
 		    msg.setSubject(subject);
 		    
 		    for (String recipient : recipients) {
-		    	unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + recipient + "\">unsubscribe<//>.";
 		    	
-			    msg.setContent(body + unsubscribeLink, "text/html; charset=utf-8");
+			    msg.setContent(body.replace("::email", recipient), "text/html; charset=utf-8");
 				msg.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
 
 			    Transport.send(msg);	

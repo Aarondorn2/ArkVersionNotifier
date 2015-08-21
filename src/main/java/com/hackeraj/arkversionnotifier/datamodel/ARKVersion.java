@@ -10,20 +10,24 @@ public class ARKVersion {
 		this.upcomingVersion = upcomingVersion;
 	}
 	
-	private String versionNumber = null;
-	private String ETA = null;
+	private String versionNumber = "null"; //using string literal because that's what JSONObject resolves to for nulls
+	private String ETA = "null"; //using string literal because that's what JSONObject resolves to for nulls
 	private ARKVersion upcomingVersion = null;
 	
 	
 	
 	public String getVersionNumber() {
-		return versionNumber;
+		return "null".equals(versionNumber)
+				? "not available"
+				: versionNumber;
 	}
 	public void setVersionNumber(String versionNumber) {
 		this.versionNumber = versionNumber;
 	}
 	public String getETA() {
-		return ETA;
+		return "null".equals(ETA)
+				? "not available"
+				: ETA;
 	}
 	public void setETA(String eTA) {
 		ETA = eTA;
