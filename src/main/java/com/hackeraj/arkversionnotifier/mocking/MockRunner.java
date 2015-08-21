@@ -8,13 +8,12 @@ import com.hackeraj.arkversionnotifier.servlets.SubscriptionServlet;
 public class MockRunner {
 
 	public static void main(String[] args) {
-		String email = "aarondorn2@gmail.com";
-		String email2 = "test2@nothing.net";
+		String emailToSubscribe = "aarondorn2@gmail.com";
 		MockingUtils.setMocking(true);
+		MockingUtils.setSendEmailsWhileMocking(true);
+				
+		subscribe(emailToSubscribe);
 		
-		subscribe(email);
-		subscribe(email2);
-		
 		AVNJob.execute();
 		AVNJob.execute();
 		AVNJob.execute();
@@ -22,7 +21,7 @@ public class MockRunner {
 		AVNJob.execute();
 		AVNJob.execute();
 		
-		unsubscribe(email);
+		unsubscribe(emailToSubscribe);
 
 		AVNJob.execute();
 		AVNJob.execute();

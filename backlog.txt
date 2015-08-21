@@ -1,5 +1,13 @@
 Things I want to add:
+-Test Email Sending + Format
+-Update JSP UI
+-unit tests
 
--Patch Notes in email
+
+Optimization Options:
+-Can remove DB call to store last JSON and only used cached version (this may cause a missed email during application updates)
+
+
+DONE:
 -mocking (run any piece locally without server instance)
--unit testing 
+-Patch Notes in email

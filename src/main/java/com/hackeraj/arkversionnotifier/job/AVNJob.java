@@ -19,8 +19,6 @@ import com.hackeraj.arkversionnotifier.utils.EmailBodies;
 import com.hackeraj.arkversionnotifier.utils.EmailManager;
 import com.hackeraj.arkversionnotifier.utils.Encryption;
 
-//TODO: do the testings.
-
 public class AVNJob {
 	
 	private static final DataManager dataManager = 
@@ -147,55 +145,37 @@ public class AVNJob {
 	
 	private static void notifyAvailable(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: New Version Available";
-		String unsubscribeLink = null;
 		String emailBody = EmailBodies.notifyAvailableEmailBody;
-		emailBody = emailBody.replace("::currentVersion", newVersion.getVersionNumber());
-		emailBody = emailBody.replace("::previousVersion", storedVersion.getVersionNumber());
+				emailBody = emailBody.replace("::currentVersion", newVersion.getVersionNumber());
+				emailBody = emailBody.replace("::previousVersion", storedVersion.getVersionNumber());
 		
-		for (String emailAddress : getSubscribedEmailAddresses("available")) {
-			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
-			emailManager.sendMail(emailSubject, 
-					emailBody + unsubscribeLink, 
-					emailAddress);
-			
-		}
+		emailManager.sendMail(emailSubject, 
+				emailBody, 
+				getSubscribedEmailAddresses("available"));
 	}
 
 	private static void notifyUpcoming(ARKVersion newVersion) {
 		String emailSubject = "ArkVersionNotification: Upcoming Version Announced";
-		String unsubscribeLink = null;
 		String emailBody = EmailBodies.notifyUpcomingEmailBody;
-		emailBody = emailBody.replace("::currentVersion", newVersion.getVersionNumber());
-		emailBody = emailBody.replace("::upcomingVersion", newVersion.getUpcomingVersion().getVersionNumber());
-		emailBody = emailBody.replace("::ETA", newVersion.getUpcomingVersion().getETA());
+				emailBody = emailBody.replace("::currentVersion", newVersion.getVersionNumber());
+				emailBody = emailBody.replace("::upcomingVersion", newVersion.getUpcomingVersion().getVersionNumber());
+				emailBody = emailBody.replace("::ETA", newVersion.getUpcomingVersion().getETA());
 		
-		
-		for (String emailAddress : getSubscribedEmailAddresses("upcoming")) {
-			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
-			emailManager.sendMail(emailSubject, 
-					emailBody + unsubscribeLink, 
-					emailAddress);
-			
-		}
+		emailManager.sendMail(emailSubject, 
+				emailBody, 
+				getSubscribedEmailAddresses("upcoming"));
 	}
 
 	private static void notifyETAUpdated(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: New ETA for Upcoming Version";
-		String unsubscribeLink = null;
 		String emailBody = EmailBodies.notifyETAUpdatedEmailBody;
-		emailBody = emailBody.replace("::upcomingVersion", newVersion.getUpcomingVersion().getVersionNumber());
-		emailBody = emailBody.replace("::previousETA", storedVersion.getUpcomingVersion().getETA());
-		emailBody = emailBody.replace("::ETA", newVersion.getUpcomingVersion().getETA());
+				emailBody = emailBody.replace("::upcomingVersion", newVersion.getUpcomingVersion().getVersionNumber());
+				emailBody = emailBody.replace("::previousETA", storedVersion.getUpcomingVersion().getETA());
+				emailBody = emailBody.replace("::ETA", newVersion.getUpcomingVersion().getETA());
 		
-		for (String emailAddress : getSubscribedEmailAddresses("eta")) {
-			unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + emailAddress + "\">unsubscribe</>.";
-			emailManager.sendMail(emailSubject, 
-					emailBody + unsubscribeLink, 
-					emailAddress);
-			
-		}
-		
-		
+		emailManager.sendMail(emailSubject, 
+				emailBody, 
+				getSubscribedEmailAddresses("eta"));
 	}
 	
 	
@@ -209,11 +189,7 @@ public class AVNJob {
 				emails.add(Encryption.decrypt(subscription.getEncryptedEmail()));
 			}
 		}
-		
 		return emails;
 	}
-	
-
-	
 	
 }

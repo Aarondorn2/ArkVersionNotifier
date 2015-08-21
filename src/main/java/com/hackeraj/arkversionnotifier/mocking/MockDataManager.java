@@ -65,6 +65,11 @@ public class MockDataManager extends DataManager{
 						// not used
 						return null;
 					}
+
+					@Override
+					public void remove() {
+						// not used
+					}
 				};
 			}
 		};
@@ -113,6 +118,11 @@ public class MockDataManager extends DataManager{
 					public List<Index> getIndexList() {
 						// not used
 						return null;
+					}
+
+					@Override
+					public void remove() {
+						// not used
 					}
 				};
 			}

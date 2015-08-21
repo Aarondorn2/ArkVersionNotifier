@@ -70,11 +70,12 @@ public class SubscriptionServlet extends HttpServlet {
 	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		if("unsubscribe".equals(req.getParameter("type"))) {
+		if("unsubscribe".equalsIgnoreCase(req.getParameter("type"))) {
 			String email = req.getParameter("email");
 
 			dataManager.deleteSubscription(email);
 		}
+				
 		resp.sendRedirect("/subscribe.jsp?unsubscribe=true");
 	}
 	
