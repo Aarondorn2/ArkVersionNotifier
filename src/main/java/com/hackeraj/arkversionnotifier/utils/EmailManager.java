@@ -11,15 +11,10 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import com.hackeraj.arkversionnotifier.mocking.MockingUtils;
-
 public class EmailManager {
-	private static final Properties properties = 
-			!MockingUtils.isMocking()
-			? new Properties() //use empty properties with app engine
-			: getLocalHostProperties();
 
 	public void sendMail(String subject, String body, List<String> recipients) {
+		Properties properties = new Properties();
 		Session session = Session.getDefaultInstance(properties, null);
 		String unsubscribeLink = null;
 
@@ -30,7 +25,7 @@ public class EmailManager {
 		    msg.setSubject(subject);
 		    
 		    for (String recipient : recipients) {
-		    	unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + recipient + "\">unsubscribe</>.";
+		    	unsubscribeLink = "<a href=\"arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=" + recipient + "\">unsubscribe<//>.";
 		    	
 			    msg.setContent(body + unsubscribeLink, "text/html; charset=utf-8");
 				msg.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
@@ -44,12 +39,4 @@ public class EmailManager {
 		} 	
 	}
 	
-	private static Properties getLocalHostProperties() {
-		Properties props = System.getProperties();
-
-	      // Setup mail server
-	      properties.setProperty("mail.smtp.host", "localhost");
-		
-		return props;
-	}
 }

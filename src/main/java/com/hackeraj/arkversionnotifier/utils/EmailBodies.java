@@ -1,7 +1,7 @@
 package com.hackeraj.arkversionnotifier.utils;
 
 public class EmailBodies {
-	private static final String disclaimer = "This email notificaiton has been auto-generated. Please do not reply to this email.  If you would no longer like to receive these notifications, please";
+	private static final String disclaimer = "This email notificaiton has been auto-generated. Please do not reply to this email.  If you would no longer like to receive these notifications, please ";
 	private static final String patchNotesURL = "steamcommunity.com/app/346110/.../0/594820656447032287/";
 	
 	public static final String notifyAvailableEmailBody = 
