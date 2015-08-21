@@ -12,8 +12,8 @@ public class EmailBodies {
 				"<div>There has been a new version announced for ARK: Survival Evolved! </div>" +
 				"<br />" +
 				"<table style=\"font-size:18px\">" +
-					"<tr width=\"200\">" +
-						"<td><b>The current version is now:</b></td>" +
+					"<tr>" +
+						"<td width=\"250\"><b>The current version is now:</b></td>" +
 						"<td>::currentVersion</td>" +
 					"</tr>" +
 					"<tr>" +
@@ -32,8 +32,8 @@ public class EmailBodies {
 				"<div>There has been a new version announced for ARK: Survival Evolved! </div>" +
 				"<br />" +
 				"<table style=\"font-size:18px\">" +
-					"<tr width=\"200\">" +
-						"<td>The current version is:</td>" +
+					"<tr>" +
+						"<td width=\"350\">The current version is:</td>" +
 						"<td>::currentVersion</td>" +
 					"</tr>" +
 					"<tr>" +
@@ -57,7 +57,7 @@ public class EmailBodies {
 				"<br />" +
 				"<table style=\"font-size:18px\">" +
 					"<tr>" +
-						"<td width=\"200\">The upcoming version is:</td>" +
+						"<td width=\"250\">The upcoming version is:</td>" +
 						"<td>::upcomingVersion</td>" +
 					"</tr>" +
 					"<tr>" +

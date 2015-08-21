@@ -19,7 +19,7 @@ public class ARKVersion {
 	public String getVersionNumber() {
 		return "null".equals(versionNumber)
 				? "not available"
-				: versionNumber;
+				: "v" + versionNumber;
 	}
 	public void setVersionNumber(String versionNumber) {
 		this.versionNumber = versionNumber;
