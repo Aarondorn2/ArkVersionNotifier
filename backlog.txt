@@ -1,6 +1,8 @@
 Things I want to add:
 -logging
+-java docs
 -unit tests
+-IE UI support
 
 
 Optimization Options:

@@ -15,7 +15,7 @@
 		
 		<hr class="pageBreak" />
 	
-		<div class="footer">Email addresses are encrypted before being stored.  
+		<div class="footer">Email addresses are encrypted before they are stored.  
 		Your information will not be shared or used for any purpose other than sending Ark update notifications.
 		All emails will have a link to unsubscribe.  This service is offered free of charge.
 		Special thanks for an API provided by <a href="http://ark.bar">http://ark.bar</a> that makes this service possible.</div>
