@@ -18,7 +18,7 @@
     </servlet-mapping>
     <servlet-mapping>
       <servlet-name>AVNCronServlet</servlet-name>
-      <url-pattern>/AVNCron/*</url-pattern>
+      <url-pattern>/AVNCron/ArkBar</url-pattern>
     </servlet-mapping>
     
     <security-constraint>

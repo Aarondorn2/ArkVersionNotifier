@@ -3,8 +3,19 @@ package com.hackeraj.arkversionnotifier.utils;
 public class EmailBodies {
 	private static final String patchNotesURL = "http://steamcommunity.com/app/346110/discussions/0/594820656447032287/";
 	
-	private static final String patchNotesHTML = "<div> <a href=\"" + patchNotesURL + "\">Click here to view <b>Patch Notes</b> on Steam</a> </div>";
-	private static final String disclaimer = "<div style=\"font-size:12px\">This email notification has been auto-generated. Please do not reply to this email.  If you would no longer like to receive these notifications, please <a href=\"http://arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=::email\">unsubscribe<a/>.</div>";
+	private static final String patchNotesHTML = 
+			"<div> "
+					+ "<a href=\"" + patchNotesURL + "\">"
+							+ "Click here to view <b>Patch Notes</b> on Steam"
+					+ "</a> "
+			+ "</div>";
+	private static final String disclaimer = 
+		"<div style=\"font-size:12px\">"
+			+ "This email notification has been auto-generated. "
+			+ "Please do not reply to this email.  "
+			+ "If you would no longer like to receive these notifications, please "
+			+ "<a href=\"http://arkversionnotifier.appspot.com/subscribe?type=unsubscribe&email=::email\">unsubscribe<a/>."
+		+ "</div>";
 
 	
 	public static final String notifyAvailableEmailBody = 

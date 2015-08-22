@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/AVNCron/ArkBar</url>
+    <description>Check for ARK updates every 20 minutes</description>
+    <schedule>every 20 minutes</schedule>
+  </cron>
+</cronentries>
