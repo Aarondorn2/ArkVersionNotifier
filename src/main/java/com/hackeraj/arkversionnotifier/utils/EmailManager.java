@@ -2,6 +2,8 @@ package com.hackeraj.arkversionnotifier.utils;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -12,6 +14,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class EmailManager {
+	private static final Logger logger = Logger.getLogger(EmailManager.class.getName());
 
 	public void sendMail(String subject, String body, List<String> recipients) {
 		Properties properties = new Properties();
@@ -31,9 +34,9 @@ public class EmailManager {
 			    Transport.send(msg);	
 		    }
 		} catch (AddressException e) {
-		    e.printStackTrace();
+		   logger.log(Level.SEVERE, "sendMail -> problem with the email address", e);
 		} catch (MessagingException e) {
-		    e.printStackTrace();
+			   logger.log(Level.SEVERE, "sendMail -> problem with sending email", e);
 		} 	
 	}
 	

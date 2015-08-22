@@ -6,11 +6,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.JSONObject;
 
 public class ArkBarClient {
+	private static final Logger logger = Logger.getLogger(ArkBarClient.class.getName());
 	private static final String arkBarURL = "https://api.ark.bar/v1/version";
+
 	
 	public JSONObject getJSON() {	
 		JSONObject json = new JSONObject();
@@ -37,7 +41,7 @@ public class ArkBarClient {
 			System.out.println("got json: " + json.toString());
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "getJSON -> unable to get JSON from ArkBar client", e);
 			try {
 				if (br != null) {
 					br.close();

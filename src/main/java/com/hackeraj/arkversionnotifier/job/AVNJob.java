@@ -2,6 +2,8 @@ package com.hackeraj.arkversionnotifier.job;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +35,7 @@ public class AVNJob {
 			!MockingUtils.isMocking()
 			? new ArkBarClient()
 			: new MockArkBarClient();
+	private static final Logger logger = Logger.getLogger(AVNJob.class.getName());
 	
 	private static boolean checkEvery20 = false;
 	private static int invokeCount = 0;
@@ -104,7 +107,7 @@ public class AVNJob {
 							)
 					);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "buildVersionFromJSON -> unable to build JSON", e);
 		}
 		
 		return newVersion;

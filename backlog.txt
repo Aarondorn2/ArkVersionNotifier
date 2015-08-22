@@ -1,5 +1,5 @@
 Things I want to add:
--Update JSP UI
+-logging
 -unit tests
 
 
@@ -8,6 +8,7 @@ Optimization Options:
 
 
 DONE:
+-Update JSP UI
 -Test Email Sending + Format
 -mocking (run any piece locally without server instance)
 -Patch Notes in email
