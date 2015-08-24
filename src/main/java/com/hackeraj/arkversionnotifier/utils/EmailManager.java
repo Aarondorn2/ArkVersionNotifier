@@ -1,5 +1,6 @@
 package com.hackeraj.arkversionnotifier.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -15,6 +16,8 @@ import javax.mail.internet.MimeMessage;
 
 public class EmailManager {
 	private static final Logger logger = Logger.getLogger(EmailManager.class.getName());
+	private static final String senderAddress = "notifications@arkversionnotifier.appspotmail.com";
+	private static final String senderName = "Ark Notification";
 
 	public void sendMail(String subject, String body, List<String> recipients) {
 		Properties properties = new Properties();
@@ -23,7 +26,7 @@ public class EmailManager {
 		try {
 		    Message msg = new MimeMessage(session);
 
-		    msg.setFrom(new InternetAddress("notifications@arkversionnotifier.appspot.com"));
+		    msg.setFrom(new InternetAddress(senderAddress, senderName));
 		    msg.setSubject(subject);
 		    
 		    for (String recipient : recipients) {
@@ -34,9 +37,11 @@ public class EmailManager {
 			    Transport.send(msg);	
 		    }
 		} catch (AddressException e) {
-		   logger.log(Level.SEVERE, "sendMail -> problem with the email address", e);
+			logger.log(Level.SEVERE, "sendMail -> problem with the recipient email address", e);
 		} catch (MessagingException e) {
-			   logger.log(Level.SEVERE, "sendMail -> problem with sending email", e);
+			logger.log(Level.SEVERE, "sendMail -> problem with sending email", e);
+		} catch (UnsupportedEncodingException e) {
+			logger.log(Level.SEVERE, "sendMail -> problem with the sender email address", e);
 		} 	
 	}
 	
