@@ -7,3 +7,5 @@ I've been doing Java for a while, but this is my first time working with many th
 
 
 Update (8/16/15): Quartz won't work with GAE!  Guess I'm learning cron tomorrow. :|
+
+Update (8/24/15): Kron was easy - took about 20 min to implement - but very unflexable (can't alter the schedule programatically).  Everything seems good to go, but I'm working on getting a bigger email quota before I release.
