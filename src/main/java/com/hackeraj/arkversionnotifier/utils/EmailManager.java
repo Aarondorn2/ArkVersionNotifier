@@ -16,8 +16,6 @@ import javax.mail.internet.MimeMessage;
 
 public class EmailManager {
 	private static final Logger logger = Logger.getLogger(EmailManager.class.getName());
-	private static final String senderAddress = "notifications@arkversionnotifier.appspotmail.com";
-	private static final String senderName = "Ark Notification";
 
 	public void sendMail(String subject, String body, List<String> recipients) {
 		Properties properties = new Properties();
@@ -26,7 +24,7 @@ public class EmailManager {
 		try {
 		    Message msg = new MimeMessage(session);
 
-		    msg.setFrom(new InternetAddress(senderAddress, senderName));
+		    msg.setFrom(new InternetAddress(Globals.EMAIL_SENDER_ADDRESS, Globals.EMAIL_SENDER_NAME));
 		    msg.setSubject(subject);
 		    
 		    for (String recipient : recipients) {

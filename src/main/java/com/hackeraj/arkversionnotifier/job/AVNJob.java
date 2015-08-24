@@ -20,6 +20,7 @@ import com.hackeraj.arkversionnotifier.utils.DataManager;
 import com.hackeraj.arkversionnotifier.utils.EmailBodies;
 import com.hackeraj.arkversionnotifier.utils.EmailManager;
 import com.hackeraj.arkversionnotifier.utils.Encryption;
+import com.hackeraj.arkversionnotifier.utils.Globals;
 import com.hackeraj.arkversionnotifier.utils.Utils;
 
 public class AVNJob {
@@ -38,53 +39,40 @@ public class AVNJob {
 			: new MockArkBarClient();
 	private static final Logger logger = Logger.getLogger(AVNJob.class.getName());
 	
-	private static boolean checkEvery20 = false;
-	private static int invokeCount = 0;
-	private static StoredJSON cachedJSON = new StoredJSON();
-
 	
 	public static void execute() {
-		boolean isStoredVersionUpdateNeeded = false;
+		boolean isStoredVersionUpdateNeeded = true;
 		
 		JSONObject json = arkBarClient.getJSON();
 		ARKVersion newVersion = buildVersionFromJSON(json);
 		ARKVersion storedVersion = getStoredVersion();
 		
 		//if there isn't a stored version, simply update the stored version.
-		if (storedVersion == null) {
-			isStoredVersionUpdateNeeded = true;
-		} else {
-			
-			System.out.println("execute -> invokeCount = " + invokeCount);
-			
-			if (checkEvery20 || invokeCount++ % 3 == 0) {
-				//if first time an upcoming version is announced
-				if (!checkEvery20 && !newVersion.getUpcomingVersion().getVersionNumber().equals("not available")) {
-					notifyUpcoming(newVersion);
-					isStoredVersionUpdateNeeded = true;
-					
-					//check every 20 minutes until update is available!
-					checkEvery20 = true;
-				} else
-				//if the update has been applied
-				if (!newVersion.getVersionNumber().equals(storedVersion.getVersionNumber())) {
-					notifyAvailable(newVersion, storedVersion);
-					isStoredVersionUpdateNeeded = true;
-					
-					if (checkEvery20) {
-						//change back to checking very 60 minutes
-						checkEvery20 = false;
-					}
-				} else 
-				//if the ETA for an upcoming version was announced
-				if (!newVersion.getUpcomingVersion().getETA().equals(storedVersion.getUpcomingVersion().getETA())) {
-					notifyETAUpdated(newVersion, storedVersion);
-					isStoredVersionUpdateNeeded = true;
-				}
+		if (storedVersion != null) {
+						
+			//if first time an upcoming version is announced
+			if (storedVersion.getUpcomingVersion().getVersionNumber().equalsIgnoreCase(Globals.NOT_AVAILABLE)
+				&&	!newVersion.getUpcomingVersion().getVersionNumber().equalsIgnoreCase(Globals.NOT_AVAILABLE)) {
 				
+				notifyUpcoming(newVersion);
+				
+			} else
+			//if the update has been applied
+			if (!newVersion.getVersionNumber().equals(storedVersion.getVersionNumber())) {
+				
+				notifyAvailable(newVersion, storedVersion);
+				
+			} else 
+			//if the ETA for an upcoming version was announced
+			if (!newVersion.getUpcomingVersion().getETA().equals(storedVersion.getUpcomingVersion().getETA())) {
+				
+				notifyETAUpdated(newVersion, storedVersion);
+				
+			} else {
+				//no changes, no need to update DB
+				isStoredVersionUpdateNeeded = false;
 			}
 		}
-		
 		
 		if (isStoredVersionUpdateNeeded) {
 			updateStoredVersion(json);
@@ -118,14 +106,9 @@ public class AVNJob {
 	private static ARKVersion getStoredVersion() {
 		ARKVersion storedVersion = null;
 
-		//get json from cache if available - save datastore call
-		if (!cachedJSON.getJSONString().isEmpty()) {
-			storedVersion = buildVersionFromJSON(cachedJSON.getJSON());
-		} else {
-			//if cache not available, go to DB for storedJSON
-			for (StoredJSON storedJSON : dataManager.getStoredJSON()) {
-				storedVersion = buildVersionFromJSON(storedJSON.getJSON());
-			}
+		//go to DB for storedJSON
+		for (StoredJSON storedJSON : dataManager.getStoredJSON()) {
+			storedVersion = buildVersionFromJSON(storedJSON.getJSON());
 		}
 		
 		return storedVersion;
@@ -135,9 +118,6 @@ public class AVNJob {
 	private static void updateStoredVersion(JSONObject json) {
 		StoredJSON storedJSON = new StoredJSON();
 		storedJSON.setJSON(json);
-		
-		//update cache
-		cachedJSON.setJSON(json);
 		
 		//delete old record from DB
 		dataManager.deleteStoredJSON();
@@ -193,6 +173,7 @@ public class AVNJob {
 				emails.add(Encryption.decrypt(subscription.getEncryptedEmail()));
 			}
 		}
+		
 		return emails;
 	}
 	

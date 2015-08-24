@@ -1,5 +1,7 @@
 package com.hackeraj.arkversionnotifier.datamodel;
 
+import com.hackeraj.arkversionnotifier.utils.Globals;
+
 
 public class ARKVersion {	
 	
@@ -26,7 +28,7 @@ public class ARKVersion {
 	}
 	public String getETA() {
 		return "null".equals(ETA)
-				? "not available"
+				? Globals.NOT_AVAILABLE
 				: ETA;
 	}
 	public void setETA(String eTA) {
