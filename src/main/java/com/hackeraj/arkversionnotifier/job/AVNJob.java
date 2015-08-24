@@ -20,19 +20,20 @@ import com.hackeraj.arkversionnotifier.utils.DataManager;
 import com.hackeraj.arkversionnotifier.utils.EmailBodies;
 import com.hackeraj.arkversionnotifier.utils.EmailManager;
 import com.hackeraj.arkversionnotifier.utils.Encryption;
+import com.hackeraj.arkversionnotifier.utils.Utils;
 
 public class AVNJob {
 	
 	private static final DataManager dataManager = 
-			!MockingUtils.isMocking()
+			!MockingUtils.isMocking() //if not mocking
 			? new DataManager()
 			: new MockDataManager();
 	private static final EmailManager emailManager = 
-			!MockingUtils.isMocking()
+			!MockingUtils.isMocking() //if not mocking
 			? new EmailManager()
 			: new MockEmailManager();
 	private static final ArkBarClient arkBarClient = 
-			!MockingUtils.isMocking()
+			!MockingUtils.isMocking() && !Utils.isDev() //if not mocking and not devserver
 			? new ArkBarClient()
 			: new MockArkBarClient();
 	private static final Logger logger = Logger.getLogger(AVNJob.class.getName());
