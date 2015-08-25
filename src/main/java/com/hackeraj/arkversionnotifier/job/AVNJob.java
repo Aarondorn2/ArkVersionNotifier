@@ -129,7 +129,7 @@ public class AVNJob {
 	
 	private static void notifyAvailable(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: New Version Available";
-		String emailBody = EmailBodies.notifyAvailableEmailBody;
+		String emailBody = EmailBodies.EMAIL_BODY_NOTIFY_AVAILABLE;
 				emailBody = emailBody.replace("::currentVersion", newVersion.getVersionNumber());
 				emailBody = emailBody.replace("::previousVersion", storedVersion.getVersionNumber());
 		
@@ -140,7 +140,7 @@ public class AVNJob {
 
 	private static void notifyUpcoming(ARKVersion newVersion) {
 		String emailSubject = "ArkVersionNotification: Upcoming Version Announced";
-		String emailBody = EmailBodies.notifyUpcomingEmailBody;
+		String emailBody = EmailBodies.EMAIL_BODY_NOTIFY_UPCOMING;
 				emailBody = emailBody.replace("::currentVersion", newVersion.getVersionNumber());
 				emailBody = emailBody.replace("::upcomingVersion", newVersion.getUpcomingVersion().getVersionNumber());
 				emailBody = emailBody.replace("::ETA", newVersion.getUpcomingVersion().getETA());
@@ -152,7 +152,7 @@ public class AVNJob {
 
 	private static void notifyETAUpdated(ARKVersion newVersion, ARKVersion storedVersion) {
 		String emailSubject = "ArkVersionNotification: New ETA for Upcoming Version";
-		String emailBody = EmailBodies.notifyETAUpdatedEmailBody;
+		String emailBody = EmailBodies.EMAIL_BODY_NOTIFY_ETA_UPDATED;
 				emailBody = emailBody.replace("::upcomingVersion", newVersion.getUpcomingVersion().getVersionNumber());
 				emailBody = emailBody.replace("::previousETA", storedVersion.getUpcomingVersion().getETA());
 				emailBody = emailBody.replace("::ETA", newVersion.getUpcomingVersion().getETA());

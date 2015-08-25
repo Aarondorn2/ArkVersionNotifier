@@ -11,6 +11,10 @@
       <servlet-name>AVNCronServlet</servlet-name>
       <servlet-class>com.hackeraj.arkversionnotifier.servlets.AVNCronServlet</servlet-class>
     </servlet>
+	<servlet>
+      <servlet-name>QueueWorkerServlet</servlet-name>
+      <servlet-class>com.hackeraj.arkversionnotifier.servlets.QueueWorkerServlet</servlet-class>
+    </servlet>
     
     <servlet-mapping>
       <servlet-name>subscriptionServlet</servlet-name>
@@ -19,6 +23,10 @@
     <servlet-mapping>
       <servlet-name>AVNCronServlet</servlet-name>
       <url-pattern>/AVNCron/ArkBar</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+      <servlet-name>QueueWorkerServlet</servlet-name>
+      <url-pattern>/queue/worker</url-pattern>
     </servlet-mapping>
     
     <security-constraint>

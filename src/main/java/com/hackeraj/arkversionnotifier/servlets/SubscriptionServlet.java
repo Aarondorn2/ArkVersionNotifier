@@ -10,8 +10,10 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import com.hackeraj.arkversionnotifier.dataaccessmodel.Subscription;
 import com.hackeraj.arkversionnotifier.mocking.MockDataManager;
+import com.hackeraj.arkversionnotifier.mocking.MockQueueManager;
 import com.hackeraj.arkversionnotifier.mocking.MockingUtils;
 import com.hackeraj.arkversionnotifier.utils.DataManager;
+import com.hackeraj.arkversionnotifier.utils.QueueManager;
 
 public class SubscriptionServlet extends HttpServlet {
 	
@@ -19,6 +21,10 @@ public class SubscriptionServlet extends HttpServlet {
 			!MockingUtils.isMocking()
 			? new DataManager()
 			: new MockDataManager();
+	private static final QueueManager queueManager = 
+			!MockingUtils.isMocking()
+			? new QueueManager()
+			: new MockQueueManager();
 
 	private static final long serialVersionUID = 712010313100708028L;
 	
@@ -57,7 +63,16 @@ public class SubscriptionServlet extends HttpServlet {
 
 	    	//subscribe new entity
 	    	dataManager.saveSubscription(subscription);
-	    
+
+	    	//send confirmation email
+	    	try {
+		    	String[] array = {email};
+				queueManager.sendMessage(QueueManager.QNAME_CONFIRMATION, 
+						"ConfirmationTask", 
+						array);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		    
 		    resp.sendRedirect("/success.jsp");
 	    } else {

@@ -18,7 +18,7 @@ public class EmailBodies {
 		+ "</div>";
 
 	
-	public static final String notifyAvailableEmailBody = 
+	public static final String EMAIL_BODY_NOTIFY_AVAILABLE = 
 			"<div style=\"font-size:18px\">" +
 				"<div>There has been a new version announced for ARK: Survival Evolved! </div>" +
 				"<br />" +
@@ -38,7 +38,7 @@ public class EmailBodies {
 				disclaimer +
 			"</div>";
 	
-	public static final String notifyUpcomingEmailBody = 
+	public static final String EMAIL_BODY_NOTIFY_UPCOMING = 
 			"<div style=\"font-size:18px\">" +
 				"<div>There has been a new version announced for ARK: Survival Evolved! </div>" +
 				"<br />" +
@@ -62,7 +62,7 @@ public class EmailBodies {
 				disclaimer +
 			"</div>";
 	
-	public static final String notifyETAUpdatedEmailBody = 
+	public static final String EMAIL_BODY_NOTIFY_ETA_UPDATED = 
 			"<div style=\"font-size:18px\">" +
 				"<div>There has been an update to the ETA of the next version of ARK: Survival Evolved! </div>" +
 				"<br />" +
@@ -82,6 +82,14 @@ public class EmailBodies {
 				"</table>" +
 				"<br />" +
 				patchNotesHTML +
+				"<br /><br /><br />" +
+				disclaimer +
+			"</div>";
+	
+
+	public static final String EMAIL_BODY_CONFIRMATION = 
+			"<div style=\"font-size:18px\">" +
+				"<div>You have been successfully subscribed to recieve notifications for ARK: Survival Evolved! </div>" +
 				"<br /><br /><br />" +
 				disclaimer +
 			"</div>";
