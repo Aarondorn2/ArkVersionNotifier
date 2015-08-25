@@ -7,7 +7,7 @@ public class MockQueueManager extends QueueManager {
 	
 	
 	public void sendMessage(String queueName, String taskClassName, String[] params) throws Exception {
-		String fullyQualifiedName = "com.hackeraj.arkversionnotifier.servlets." + taskClassName;
+		String fullyQualifiedName = "com.hackeraj.arkversionnotifier.queuetasks." + taskClassName;
         
         try {
 			QueueTask task = (QueueTask) Class.forName(fullyQualifiedName).newInstance(); //build class

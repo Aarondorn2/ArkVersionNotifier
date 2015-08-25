@@ -1,6 +1,8 @@
 package com.hackeraj.arkversionnotifier.servlets;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +18,8 @@ public class QueueWorkerServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 5163932874249089093L;
 	private static final long fiveMinutes = 5L * 1000L * 60L;
+	
+	private static final Logger logger = Logger.getLogger(QueueWorkerServlet.class.getName());
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -32,8 +36,7 @@ public class QueueWorkerServlet extends HttpServlet {
     			task.run(); //run
     		} catch (InstantiationException | IllegalAccessException
     				| ClassNotFoundException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			logger.log(Level.SEVERE, "doPost -> unable to run task", e);
     		}
         }
         

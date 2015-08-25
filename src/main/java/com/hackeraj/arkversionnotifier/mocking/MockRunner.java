@@ -11,7 +11,7 @@ public class MockRunner {
 		String emailToSubscribe = "aarondorn2@gmail.com";
 		MockingUtils.setMocking(true);
 		MockingUtils.setSendEmailsWhileMocking(true);
-				
+		
 		subscribe(emailToSubscribe);
 		
 		AVNJob.execute();

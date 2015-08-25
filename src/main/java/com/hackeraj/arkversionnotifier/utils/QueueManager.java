@@ -9,7 +9,7 @@ public class QueueManager {
 	public static final String QNAME_CONFIRMATION = "confirmationQueue";
 	
 	public void sendMessage(String queueName, String taskClassName, String[] params) throws Exception {
-		String fullyQualifiedName = "com.hackeraj.arkversionnotifier.servlets." + taskClassName;
+		String fullyQualifiedName = "com.hackeraj.arkversionnotifier.queuetasks." + taskClassName;
 		
 		Object task = Class.forName(fullyQualifiedName).newInstance();
 		if (!(task instanceof QueueTask)) {

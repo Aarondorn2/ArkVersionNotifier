@@ -1,6 +1,8 @@
 package com.hackeraj.arkversionnotifier.servlets;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,8 @@ public class SubscriptionServlet extends HttpServlet {
 			: new MockQueueManager();
 
 	private static final long serialVersionUID = 712010313100708028L;
+	private static final Logger logger = Logger.getLogger(SubscriptionServlet.class.getName());
+
 	
 	@Override
 	  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -71,7 +75,7 @@ public class SubscriptionServlet extends HttpServlet {
 						"ConfirmationTask", 
 						array);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, "doPost -> unable to place task on queue", e);
 			}
 		    
 		    resp.sendRedirect("/success.jsp");
