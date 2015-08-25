@@ -1,4 +1,4 @@
-package com.hackeraj.arkversionnotifier.datamodel;
+package com.hackeraj.arkversionnotifier.beans;
 
 import com.hackeraj.arkversionnotifier.utils.Globals;
 

@@ -1,4 +1,4 @@
-package com.hackeraj.arkversionnotifier.datamodel;
+package com.hackeraj.arkversionnotifier.dataaccessmodel;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

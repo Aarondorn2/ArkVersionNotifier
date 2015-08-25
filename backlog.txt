@@ -1,12 +1,10 @@
 Things I want to add:
+-confirmation email upon subscription
 -logging
 -java docs
 -unit tests
 -IE UI support
-
-
-Optimization Options:
--Can remove DB call to store last JSON and only used cached version (this may cause a missed email during application updates)
+-mobile friendly email?
 
 
 DONE:

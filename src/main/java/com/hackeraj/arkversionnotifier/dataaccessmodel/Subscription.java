@@ -1,4 +1,4 @@
-package com.hackeraj.arkversionnotifier.datamodel;
+package com.hackeraj.arkversionnotifier.dataaccessmodel;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;

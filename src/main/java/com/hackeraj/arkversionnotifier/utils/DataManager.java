@@ -3,8 +3,8 @@ package com.hackeraj.arkversionnotifier.utils;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import com.google.appengine.api.datastore.QueryResultIterable;
-import com.hackeraj.arkversionnotifier.datamodel.StoredJSON;
-import com.hackeraj.arkversionnotifier.datamodel.Subscription;
+import com.hackeraj.arkversionnotifier.dataaccessmodel.StoredJSON;
+import com.hackeraj.arkversionnotifier.dataaccessmodel.Subscription;
 
 public class DataManager {
 

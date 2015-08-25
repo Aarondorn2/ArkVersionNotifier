@@ -20,14 +20,15 @@ public class EmailManager {
 	public void sendMail(String subject, String body, List<String> recipients) {
 		Properties properties = new Properties();
 		Session session = Session.getDefaultInstance(properties, null);
-
+		Message msg = null;
 		try {
-		    Message msg = new MimeMessage(session);
+			InternetAddress fromAddr = new InternetAddress(Globals.EMAIL_SENDER_ADDRESS, Globals.EMAIL_SENDER_NAME);
 
-		    msg.setFrom(new InternetAddress(Globals.EMAIL_SENDER_ADDRESS, Globals.EMAIL_SENDER_NAME));
-		    msg.setSubject(subject);
-		    
 		    for (String recipient : recipients) {
+			    msg = new MimeMessage(session); //create new message for each recipient
+
+			    msg.setFrom(fromAddr);
+			    msg.setSubject(subject);
 		    	
 			    msg.setContent(body.replace("::email", recipient), "text/html; charset=utf-8");
 				msg.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
