@@ -1,5 +1,4 @@
 Things I want to add:
--confirmation email upon subscription
 -logging
 -java docs
 -unit tests
@@ -8,6 +7,7 @@ Things I want to add:
 
 
 DONE:
+-confirmation email upon subscription
 -Update JSP UI
 -Test Email Sending + Format
 -mocking (run any piece locally without server instance)

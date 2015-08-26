@@ -14,10 +14,13 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.sendgrid.SendGrid;
+import com.sendgrid.SendGridException;
+
 public class EmailManager {
 	private static final Logger logger = Logger.getLogger(EmailManager.class.getName());
 
-	public void sendMail(String subject, String body, List<String> recipients) {
+	public void sendMailGAE(String subject, String body, List<String> recipients) {
 		Properties properties = new Properties();
 		Session session = Session.getDefaultInstance(properties, null);
 		Message msg = null;
@@ -42,6 +45,30 @@ public class EmailManager {
 		} catch (UnsupportedEncodingException e) {
 			logger.log(Level.SEVERE, "sendMail -> problem with the sender email address", e);
 		} 	
+	}
+	
+	public void sendMail(String subject, String body, List<String> recipients) {
+		String fromAddr = Globals.EMAIL_SENDER_NAME + "<" + Globals.EMAIL_SENDER_ADDRESS + ">";
+		
+		SendGrid sendgrid = new SendGrid(Pass.getSendGridUser(), Pass.getSendGridPass());
+	    
+		for (String recipient : recipients) {
+			SendGrid.Email email = new SendGrid.Email();
+
+		    email.addTo(recipient);
+		    email.setFrom(fromAddr);
+		    email.setSubject(subject);
+		    email.setHtml(body);
+
+		    try {
+				sendgrid.send(email);
+			    logger.log(Level.SEVERE, "sent message!");
+
+			} catch (SendGridException e) {
+				logger.log(Level.SEVERE, "sendMail -> unable to send mail with sendgrid", e);
+			}
+			
+		}
 	}
 	
 }
