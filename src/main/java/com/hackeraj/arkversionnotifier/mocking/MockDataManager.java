@@ -9,8 +9,8 @@ import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.Index;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.appengine.api.datastore.QueryResultIterator;
-import com.hackeraj.arkversionnotifier.dataaccessmodel.StoredJSON;
-import com.hackeraj.arkversionnotifier.dataaccessmodel.Subscription;
+import com.hackeraj.arkversionnotifier.datamodel.StoredJSON;
+import com.hackeraj.arkversionnotifier.datamodel.Subscription;
 import com.hackeraj.arkversionnotifier.utils.DataManager;
 import com.hackeraj.arkversionnotifier.utils.Hash;
 

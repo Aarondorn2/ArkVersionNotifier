@@ -9,8 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.hackeraj.arkversionnotifier.beans.ARKVersion;
-import com.hackeraj.arkversionnotifier.dataaccessmodel.StoredJSON;
-import com.hackeraj.arkversionnotifier.dataaccessmodel.Subscription;
+import com.hackeraj.arkversionnotifier.datamodel.StoredJSON;
+import com.hackeraj.arkversionnotifier.datamodel.Subscription;
 import com.hackeraj.arkversionnotifier.mocking.MockArkBarClient;
 import com.hackeraj.arkversionnotifier.mocking.MockDataManager;
 import com.hackeraj.arkversionnotifier.mocking.MockEmailManager;

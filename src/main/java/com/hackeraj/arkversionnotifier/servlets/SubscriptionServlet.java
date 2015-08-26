@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
-import com.hackeraj.arkversionnotifier.dataaccessmodel.Subscription;
+import com.hackeraj.arkversionnotifier.datamodel.Subscription;
 import com.hackeraj.arkversionnotifier.mocking.MockDataManager;
 import com.hackeraj.arkversionnotifier.mocking.MockQueueManager;
 import com.hackeraj.arkversionnotifier.mocking.MockingUtils;

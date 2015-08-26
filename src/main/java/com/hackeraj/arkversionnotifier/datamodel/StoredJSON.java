@@ -1,4 +1,4 @@
-package com.hackeraj.arkversionnotifier.dataaccessmodel;
+package com.hackeraj.arkversionnotifier.datamodel;
 
 import org.json.JSONObject;
 
