@@ -14,21 +14,21 @@ public class MockRunner {
 		
 		subscribe(emailToSubscribe);
 		
-		AVNJob.execute();
-		AVNJob.execute();
-		AVNJob.execute();
-		AVNJob.execute();
-		AVNJob.execute();
-		AVNJob.execute();
+		AVNJob.startAVNJob();
+		AVNJob.startAVNJob();
+		AVNJob.startAVNJob();
+		AVNJob.startAVNJob();
+		AVNJob.startAVNJob();
+		AVNJob.startAVNJob();
 		
 		unsubscribe(emailToSubscribe);
 
-		AVNJob.execute();
-		AVNJob.execute();
-		AVNJob.execute();
-		AVNJob.execute();
-		AVNJob.execute();
-		AVNJob.execute();
+		AVNJob.startAVNJob();
+		AVNJob.startAVNJob();
+		AVNJob.startAVNJob();
+		AVNJob.startAVNJob();
+		AVNJob.startAVNJob();
+		AVNJob.startAVNJob();
 		
 	}
 	

@@ -2,7 +2,6 @@ Things I want to add:
 -logging
 -java docs
 -unit tests
--IE UI support
 -mobile friendly email?
 
 
@@ -12,3 +11,5 @@ DONE:
 -Test Email Sending + Format
 -mocking (run any piece locally without server instance)
 -Patch Notes in email
+-IE UI support (not going to do anything here. App functions in IE and looks as intended with IE11)
+

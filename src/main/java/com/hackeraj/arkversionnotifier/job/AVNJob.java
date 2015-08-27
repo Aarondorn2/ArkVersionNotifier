@@ -40,7 +40,8 @@ public class AVNJob {
 	private static final Logger logger = Logger.getLogger(AVNJob.class.getName());
 	
 	
-	public static void execute() {
+	public static void startAVNJob() {
+		logger.log(Level.FINE, "startAVNJob -> starting method");
 		boolean isStoredVersionUpdateNeeded = true;
 		
 		JSONObject json = arkBarClient.getJSON();
@@ -53,37 +54,46 @@ public class AVNJob {
 			//if first time an upcoming version is announced
 			if (storedVersion.getUpcomingVersion().getVersionNumber().equalsIgnoreCase(Globals.NOT_AVAILABLE)
 				&&	!newVersion.getUpcomingVersion().getVersionNumber().equalsIgnoreCase(Globals.NOT_AVAILABLE)) {
-				
+
+				logger.log(Level.INFO, "startAVNJob -> an upcoming version was announced");
 				notifyUpcoming(newVersion);
 				
 			} else
 			//if the update has been applied
 			if (!newVersion.getVersionNumber().equals(storedVersion.getVersionNumber())) {
-				
+
+				logger.log(Level.INFO, "startAVNJob -> an update is available for download");
 				notifyAvailable(newVersion, storedVersion);
 				
 			} else 
 			//if the ETA for an upcoming version was announced
 			if (!newVersion.getUpcomingVersion().getETA().equals(storedVersion.getUpcomingVersion().getETA())) {
-				
+
+				logger.log(Level.INFO, "startAVNJob -> the ETA changed for the next update");
 				notifyETAUpdated(newVersion, storedVersion);
 				
 			} else {
 				//no changes, no need to update DB
+				logger.log(Level.INFO, "startAVNJob -> no changes detected");
 				isStoredVersionUpdateNeeded = false;
 			}
 		}
 		
 		if (isStoredVersionUpdateNeeded) {
+			logger.log(Level.INFO, "startAVNJob -> update needed to stored version");
 			updateStoredVersion(json);
 		}
+
+		logger.log(Level.FINE, "startAVNJob -> ending method");
 	}	
 	
 	
 	private static ARKVersion buildVersionFromJSON(JSONObject json) {
+		logger.log(Level.FINE, "buildVersionFromJSON -> starting method");
 		ARKVersion newVersion = new ARKVersion();
 		
 		try {
+			logger.log(Level.FINE, "buildVersionFromJSON -> json = " + json.toString());
 			JSONObject upcoming = json.getJSONObject("upcoming");
 
 			newVersion = new ARKVersion(
@@ -98,7 +108,8 @@ public class AVNJob {
 		} catch (JSONException e) {
 			logger.log(Level.SEVERE, "buildVersionFromJSON -> unable to build JSON", e);
 		}
-		
+
+		logger.log(Level.FINE, "buildVersionFromJSON -> ending method");
 		return newVersion;
 	}
 	
