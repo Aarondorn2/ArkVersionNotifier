@@ -43,29 +43,6 @@ public class EmailManager {
 			logger.log(Level.SEVERE, "sendMail -> problem with the sender email address", e);
 		} 	
 	}
-//	
-//	public void sendMail(String subject, String body, List<String> recipients) {
-//		String fromAddr = Globals.EMAIL_SENDER_NAME + "<" + Globals.EMAIL_SENDER_ADDRESS + ">";
-//		
-//		SendGrid sendgrid = new SendGrid(Pass.getSendGridUser(), Pass.getSendGridPass());
-//	    
-//		for (String recipient : recipients) {
-//			SendGrid.Email email = new SendGrid.Email();
-//
-//		    email.addTo(recipient);
-//		    email.setFrom(fromAddr);
-//		    email.setSubject(subject);
-//		    email.setHtml(body);
-//
-//		    try {
-//				sendgrid.send(email);
-//			    logger.log(Level.SEVERE, "sent message!");
-//
-//			} catch (SendGridException e) {
-//				logger.log(Level.SEVERE, "sendMail -> unable to send mail with sendgrid", e);
-//			}
-//			
-//		}
-//	}
+
 	
 }
