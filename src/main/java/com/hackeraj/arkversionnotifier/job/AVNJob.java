@@ -93,7 +93,6 @@ public class AVNJob {
 		ARKVersion newVersion = new ARKVersion();
 		
 		try {
-			logger.log(Level.FINE, "buildVersionFromJSON -> json = " + json.toString());
 			JSONObject upcoming = json.getJSONObject("upcoming");
 
 			newVersion = new ARKVersion(
