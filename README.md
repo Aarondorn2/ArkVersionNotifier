@@ -1,3 +1,19 @@
+DEPRECATED
+=======================
+
+Due to the consumed API being removed, this project no longer functions.
+
+
+
+
+
+
+
+
+
+
+
+
 Ark Version Notifier
 =============================
 
